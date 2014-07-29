@@ -76,7 +76,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.andrefbsantos</groupId>
+			<groupId>com.github.andrefbsantos.libdynticker</groupId>
 			<artifactId>libdynticker</artifactId>
 			<version>${libdynticker.version}</version>
 		</dependency>
@@ -155,7 +155,7 @@
 							<goal>install-file</goal>
 						</goals>
 						<configuration>
-							<groupId>com.github.andrefbsantos</groupId>
+							<groupId>com.github.andrefbsantos.libdynticker</groupId>
 							<artifactId>libdynticker</artifactId>
 							<version>${libdynticker.version}</version>
 							<packaging>jar</packaging>
