@@ -2,8 +2,11 @@ package com.github.andrefbsantos.libpricealarm;
 
 import com.github.andrefbsantos.libdynticker.core.Exchange;
 import com.github.andrefbsantos.libdynticker.core.Pair;
+
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.IOException;
+import java.sql.Timestamp;
 
 public abstract class Alarm extends TimerTask {
 	
@@ -12,7 +15,8 @@ public abstract class Alarm extends TimerTask {
 	private boolean on;
 	private Timer timer;
 	private long period;
-	protected float lastValue;
+	private Timestamp lastUpdateTimestamp;
+	protected double lastValue;
 	protected Notify notify;
 
 	public Alarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
@@ -25,8 +29,16 @@ public abstract class Alarm extends TimerTask {
 		timer.schedule(this, 0, period);
 	}
 	
-	public void updateLastValue() {
-		lastValue = exchange.getLastValue(pair);
+	protected double getExchangeLastValue() {
+		double lastValue = this.lastValue;
+		try {
+			lastValue = exchange.getLastValue(pair);
+			if(lastUpdateTimestamp == null)
+				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
+			else
+				lastUpdateTimestamp.setTime(System.currentTimeMillis());
+		} catch (IOException e) {}
+		return lastValue;
 	}
 	
 	public Exchange getExchange() {
@@ -82,7 +94,7 @@ public abstract class Alarm extends TimerTask {
 		timer.schedule(this, 0, period);
 	}
 	
-	public float getLastValue() {
+	public double getLastValue() {
 		return lastValue;
 	}
 }
