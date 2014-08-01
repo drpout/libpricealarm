@@ -26,7 +26,7 @@ public abstract class Alarm extends TimerTask {
 		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
-		timer.schedule(this, 0, period);
+		timer.schedule(this, period, period);
 	}
 	
 	protected double getExchangeLastValue() {
