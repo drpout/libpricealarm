@@ -135,7 +135,7 @@
 				<version>1.0-beta-5</version>
 				<executions>
 					<execution>
-						<id>get-libdynticker</id>
+						<id>get-libdynticker-jar</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>download-single</goal>
@@ -143,6 +143,18 @@
 						<configuration>
 							<url>https://github.com</url>
 							<fromFile>andrefbsantos/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.jar</fromFile>
+							<toDir>${project.build.directory}/lib</toDir>
+						</configuration>
+					</execution>
+					<execution>
+						<id>get-libdynticker-pom</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>download-single</goal>
+						</goals>
+						<configuration>
+							<url>https://github.com</url>
+							<fromFile>andrefbsantos/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.pom</fromFile>
 							<toDir>${project.build.directory}/lib</toDir>
 						</configuration>
 					</execution>
@@ -165,6 +177,7 @@
 							<version>${libdynticker.version}</version>
 							<packaging>jar</packaging>
 							<file>${project.build.directory}/lib/libdynticker-${libdynticker.version}.jar</file>
+							<pomFile>${project.build.directory}/lib/libdynticker-${libdynticker.version}.pom</pomFile>
 						</configuration>
 					</execution>
 				</executions>
