@@ -31,4 +31,20 @@ public class PriceHitAlarm extends Alarm {
 			doReset(notify.trigger());
 		}
 	}
+
+	public double getLowerBound() {
+		return lowerBound;
+	}
+
+	public void setLowerBound(double lowerBound) {
+		this.lowerBound = lowerBound;
+	}
+
+	public double getUpperBound() {
+		return upperBound;
+	}
+
+	public void setUpperBound(double upperBound) {
+		this.upperBound = upperBound;
+	}
 }

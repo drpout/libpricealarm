@@ -81,7 +81,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	public void setPeriod(long period) {
 		this.period = period;
 		cancel();
-		timer.schedule(this, 0, period);
+		timer.schedule(this, period, period);
 	}
 
 	public void toggle() {
@@ -89,7 +89,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 			cancel();
 			on = false;
 		} else {
-			timer.schedule(this, 0, period);
+			timer.schedule(this, period, period);
 			on = true;
 		}
 	}
@@ -103,7 +103,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void turnOn() {
 		if (!on) {
-			timer.schedule(this, 0, period);
+			timer.schedule(this, period, period);
 			on = true;
 		}
 	}
@@ -121,6 +121,20 @@ public abstract class Alarm extends TimerTask implements Serializable {
 			is.defaultReadObject();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
+	public void resume() {
+		if (on) {
+			timer.schedule(this, period, period);
 		}
 	}
 }

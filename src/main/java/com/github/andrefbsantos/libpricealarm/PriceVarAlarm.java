@@ -40,4 +40,20 @@ public class PriceVarAlarm extends Alarm {
 			variation = lastValue * (percent * 0.01);
 		}
 	}
+
+	public double getVariation() {
+		return variation;
+	}
+
+	public void setVariation(double variation) {
+		this.variation = variation;
+	}
+
+	public int getPercent() {
+		return percent;
+	}
+
+	public void setPercent(int percent) {
+		this.percent = percent;
+	}
 }
