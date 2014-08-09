@@ -1,19 +1,27 @@
 package com.github.andrefbsantos.libpricealarm;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.github.andrefbsantos.libdynticker.core.Exchange;
 import com.github.andrefbsantos.libdynticker.core.Pair;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.io.IOException;
-import java.sql.Timestamp;
+public abstract class Alarm extends TimerTask implements Serializable {
 
-public abstract class Alarm extends TimerTask {
-	
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 438506410563236110L;
+
 	protected Exchange exchange;
 	protected Pair pair;
 	private boolean on;
-	private Timer timer;
+	private transient Timer timer;
 	private long period;
 	private Timestamp lastUpdateTimestamp;
 	protected double lastValue;
@@ -22,53 +30,62 @@ public abstract class Alarm extends TimerTask {
 	public Alarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
 		this.exchange = exchange;
 		this.pair = pair;
-		this.on = true;
+		on = true;
 		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
 		timer.schedule(this, period, period);
 	}
-	
-	protected double getExchangeLastValue() {
-		double lastValue = this.lastValue;
-		try {
-			lastValue = exchange.getLastValue(pair);
-			if(lastUpdateTimestamp == null)
-				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
-			else
-				lastUpdateTimestamp.setTime(System.currentTimeMillis());
-		} catch (IOException e) {}
-		return lastValue;
-	}
-	
-	public Exchange getExchange() {
-		return exchange;
-	}
-	
-	public Pair getPair() {
-		return pair;
-	}
-	
-	public boolean isOn() {
-		return on;
-	}
-	
-	public void turnOff() {
-		if(on) {
+
+	public void doReset(boolean reset) {
+		if (!reset) {
 			cancel();
 			on = false;
 		}
 	}
-	
-	public void turnOn() {
-		if(!on) {
-			timer.schedule(this, 0, period);
-			on = true;
-		}
+
+	public Exchange getExchange() {
+		return exchange;
 	}
-	
+
+	protected double getExchangeLastValue() {
+		double lastValue = this.lastValue;
+		try {
+			lastValue = exchange.getLastValue(pair);
+			if (lastUpdateTimestamp == null) {
+				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
+			} else {
+				lastUpdateTimestamp.setTime(System.currentTimeMillis());
+			}
+		} catch (IOException e) {
+		}
+		return lastValue;
+	}
+
+	public double getLastValue() {
+		return lastValue;
+	}
+
+	public Pair getPair() {
+		return pair;
+	}
+
+	public long getPeriod() {
+		return period;
+	}
+
+	public boolean isOn() {
+		return on;
+	}
+
+	public void setPeriod(long period) {
+		this.period = period;
+		cancel();
+		timer.schedule(this, 0, period);
+	}
+
 	public void toggle() {
-		if(on) {
+		if (on) {
 			cancel();
 			on = false;
 		} else {
@@ -76,25 +93,34 @@ public abstract class Alarm extends TimerTask {
 			on = true;
 		}
 	}
-	
-	public void doReset(boolean reset) {
-		if(!reset) {
+
+	public void turnOff() {
+		if (on) {
 			cancel();
 			on = false;
 		}
 	}
-	
-	public long getPeriod() {
-		return period;
+
+	public void turnOn() {
+		if (!on) {
+			timer.schedule(this, 0, period);
+			on = true;
+		}
 	}
-	
-	public void setPeriod(long period) {
-		this.period = period;
-		cancel();
-		timer.schedule(this, 0, period);
+
+	private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
+		try {
+			os.defaultWriteObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	public double getLastValue() {
-		return lastValue;
+
+	private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
+		try {
+			is.defaultReadObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

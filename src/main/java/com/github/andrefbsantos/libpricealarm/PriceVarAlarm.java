@@ -6,31 +6,38 @@ import com.github.andrefbsantos.libdynticker.core.Exchange;
 import com.github.andrefbsantos.libdynticker.core.Pair;
 
 public class PriceVarAlarm extends Alarm {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -5424769817492896869L;
 	private double variation;
 	private int percent;
-	
-	public PriceVarAlarm(Exchange exchange, Pair pair, Timer timer, long period,
-		Notify notify, double variation) {
+
+	public PriceVarAlarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify,
+			double variation) {
 		super(exchange, pair, timer, period, notify);
 		this.variation = variation;
-		this.percent = 0;
+		percent = 0;
 		lastValue = getExchangeLastValue();
 	}
-	
-	public PriceVarAlarm(Exchange exchange, Pair pair, Timer timer, long period,
-		Notify notify, int percent) {
+
+	public PriceVarAlarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify,
+			int percent) {
 		super(exchange, pair, timer, period, notify);
 		this.percent = percent;
 		lastValue = getExchangeLastValue();
-		variation = lastValue * (percent*0.01);
+		variation = lastValue * (percent * 0.01);
 	}
-	
+
+	@Override
 	public void run() {
 		double newValue = getExchangeLastValue();
-		if(Math.abs(lastValue - newValue) >= variation)
+		if (Math.abs(lastValue - newValue) >= variation) {
 			doReset(notify.trigger());
+		}
 		lastValue = newValue;
-		if(percent > 0)
-			variation = lastValue * (percent*0.01);
+		if (percent > 0) {
+			variation = lastValue * (percent * 0.01);
+		}
 	}
 }

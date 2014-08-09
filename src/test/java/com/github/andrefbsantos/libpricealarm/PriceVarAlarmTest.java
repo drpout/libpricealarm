@@ -79,5 +79,4 @@ public class PriceVarAlarmTest {
 		when(exchange.getLastValue(null)).thenReturn(0.012);
 		verify(notify, timeout(1000).times(2)).trigger();
 	}
-
 }

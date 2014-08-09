@@ -7,9 +7,13 @@ import com.github.andrefbsantos.libdynticker.core.Pair;
 
 public class PriceHitUpperBoundAlarm extends PriceHitAlarm {
 
-	public PriceHitUpperBoundAlarm(Exchange exchange, Pair pair,
-	Timer timer, long period, Notify notify, double upperBound)
-	throws UpperBoundSmallerThanLowerBoundException {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7107219115788419337L;
+
+	public PriceHitUpperBoundAlarm(Exchange exchange, Pair pair, Timer timer, long period,
+			Notify notify, double upperBound) throws UpperBoundSmallerThanLowerBoundException {
 		super(exchange, pair, timer, period, notify, upperBound, Double.NEGATIVE_INFINITY);
 	}
 
