@@ -18,6 +18,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	 */
 	private static final long serialVersionUID = 438506410563236110L;
 
+	private long id;
 	protected Exchange exchange;
 	protected Pair pair;
 	private boolean on;
@@ -27,10 +28,11 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	protected double lastValue;
 	protected Notify notify;
 
-	public Alarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
+	public Alarm(long id, Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
+		this.id = id;
 		this.exchange = exchange;
 		this.pair = pair;
-		on = true;
+		this.on = true;
 		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
@@ -39,23 +41,23 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void doReset(boolean reset) {
 		if (!reset) {
-			cancel();
-			on = false;
+			this.cancel();
+			this.on = false;
 		}
 	}
 
 	public Exchange getExchange() {
-		return exchange;
+		return this.exchange;
 	}
 
 	protected double getExchangeLastValue() {
 		double lastValue = this.lastValue;
 		try {
-			lastValue = exchange.getLastValue(pair);
-			if (lastUpdateTimestamp == null) {
-				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
+			lastValue = this.exchange.getLastValue(this.pair);
+			if (this.lastUpdateTimestamp == null) {
+				this.lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 			} else {
-				lastUpdateTimestamp.setTime(System.currentTimeMillis());
+				this.lastUpdateTimestamp.setTime(System.currentTimeMillis());
 			}
 		} catch (IOException e) {
 		}
@@ -63,48 +65,48 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	}
 
 	public double getLastValue() {
-		return lastValue;
+		return this.lastValue;
 	}
 
 	public Pair getPair() {
-		return pair;
+		return this.pair;
 	}
 
 	public long getPeriod() {
-		return period;
+		return this.period;
 	}
 
 	public boolean isOn() {
-		return on;
+		return this.on;
 	}
 
 	public void setPeriod(long period) {
 		this.period = period;
-		cancel();
-		timer.schedule(this, period, period);
+		this.cancel();
+		this.timer.schedule(this, period, period);
 	}
 
 	public void toggle() {
-		if (on) {
-			cancel();
-			on = false;
+		if (this.on) {
+			this.cancel();
+			this.on = false;
 		} else {
-			timer.schedule(this, period, period);
-			on = true;
+			this.timer.schedule(this, this.period, this.period);
+			this.on = true;
 		}
 	}
 
 	public void turnOff() {
-		if (on) {
-			cancel();
-			on = false;
+		if (this.on) {
+			this.cancel();
+			this.on = false;
 		}
 	}
 
 	public void turnOn() {
-		if (!on) {
-			timer.schedule(this, period, period);
-			on = true;
+		if (!this.on) {
+			this.timer.schedule(this, this.period, this.period);
+			this.on = true;
 		}
 	}
 
@@ -125,7 +127,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	}
 
 	public Timer getTimer() {
-		return timer;
+		return this.timer;
 	}
 
 	public void setTimer(Timer timer) {
@@ -133,8 +135,16 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	}
 
 	public void resume() {
-		if (on) {
-			timer.schedule(this, period, period);
+		if (this.on) {
+			this.timer.schedule(this, this.period, this.period);
 		}
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

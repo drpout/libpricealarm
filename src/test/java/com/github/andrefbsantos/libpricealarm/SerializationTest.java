@@ -32,8 +32,8 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitAlarmSerialization() throws IOException, ClassNotFoundException,
-	UpperBoundSmallerThanLowerBoundException {
-		PriceHitAlarm testAlarm = new PriceHitAlarm(new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 600, 580);
+			UpperBoundSmallerThanLowerBoundException {
+		PriceHitAlarm testAlarm = new PriceHitAlarm(1, new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 600, 580);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
 		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -48,8 +48,6 @@ public class SerializationTest {
 		newAlarm = (PriceHitAlarm) in.readObject();
 		in.close();
 		byteArrayInputStream.close();
-		Assert.assertNotNull(newAlarm.getPair());
-		Assert.assertNotNull(testAlarm.getPair());
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
 		Assert.assertEquals(testAlarm.getPeriod(), newAlarm.getPeriod());
@@ -61,8 +59,8 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitLowerBoundAlarmSerialization() throws IOException,
-			ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
-		PriceHitLowerBoundAlarm testAlarm = new PriceHitLowerBoundAlarm(new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 0.001);
+	ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
+		PriceHitLowerBoundAlarm testAlarm = new PriceHitLowerBoundAlarm(1, new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 0.001);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
 		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -77,8 +75,8 @@ public class SerializationTest {
 		newAlarm = (PriceHitLowerBoundAlarm) in.readObject();
 		in.close();
 		byteArrayInputStream.close();
-		Assert.assertNotNull(newAlarm.getPair());
-		Assert.assertNotNull(testAlarm.getPair());
+		Assert.assertNotNull(newAlarm);
+		Assert.assertTrue(newAlarm instanceof PriceHitLowerBoundAlarm);
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
 		Assert.assertEquals(testAlarm.getPeriod(), newAlarm.getPeriod());
@@ -91,8 +89,8 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitUpperBoundAlarmSerialization() throws IOException,
-			ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
-		PriceHitUpperBoundAlarm testAlarm = new PriceHitUpperBoundAlarm(new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 0.001);
+	ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
+		PriceHitUpperBoundAlarm testAlarm = new PriceHitUpperBoundAlarm(1, new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 0.001);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
 		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -107,8 +105,6 @@ public class SerializationTest {
 		newAlarm = (PriceHitUpperBoundAlarm) in.readObject();
 		in.close();
 		byteArrayInputStream.close();
-		Assert.assertNotNull(newAlarm.getPair());
-		Assert.assertNotNull(testAlarm.getPair());
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
 		Assert.assertEquals(testAlarm.getPeriod(), newAlarm.getPeriod());
@@ -120,7 +116,7 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceVarAlarmSerialization() throws IOException, ClassNotFoundException {
-		PriceVarAlarm testAlarm = new PriceVarAlarm(new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 50);
+		PriceVarAlarm testAlarm = new PriceVarAlarm(1, new BitstampExchange(), new Pair("BTC", "USD"), new Timer(), 1000, notify, 50);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
 		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -135,8 +131,6 @@ public class SerializationTest {
 		newAlarm = (PriceVarAlarm) in.readObject();
 		in.close();
 		byteArrayInputStream.close();
-		Assert.assertNotNull(newAlarm.getPair());
-		Assert.assertNotNull(testAlarm.getPair());
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
 		Assert.assertEquals(testAlarm.getPeriod(), newAlarm.getPeriod());

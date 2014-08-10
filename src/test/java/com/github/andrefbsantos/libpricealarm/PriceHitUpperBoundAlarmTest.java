@@ -15,43 +15,43 @@ import org.junit.Test;
 import com.github.andrefbsantos.libdynticker.core.Exchange;
 
 public class PriceHitUpperBoundAlarmTest {
-	
+
 	private PriceHitUpperBoundAlarm testAlarm;
 	private Notify notify;
 	private Exchange exchange;
 
 	@Before
 	public void setUp() throws Exception {
-		notify = mock(Notify.class);
-		exchange = mock(Exchange.class);
+		this.notify = mock(Notify.class);
+		this.exchange = mock(Exchange.class);
 		Timer timer = new Timer();
-		testAlarm = new PriceHitUpperBoundAlarm(exchange, null, timer, 1000, notify, 0.0043);
+		this.testAlarm = new PriceHitUpperBoundAlarm(1, this.exchange, null, timer, 1000, this.notify, 0.0043);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		testAlarm.turnOff();
+		this.testAlarm.turnOff();
 	}
 
 	@Test
 	public void testUpperBoundNoReset() throws IOException {
-		when(notify.trigger()).thenReturn(false);
-		when(exchange.getLastValue(null)).thenReturn(0.00445625);
-		verify(notify, timeout(1500).times(1)).trigger();
+		when(this.notify.trigger()).thenReturn(false);
+		when(this.exchange.getLastValue(null)).thenReturn(0.00445625);
+		verify(this.notify, timeout(1500).times(1)).trigger();
 	}
-	
+
 	@Test
 	public void testUpperBoundAndReset() throws IOException {
-		when(notify.trigger()).thenReturn(true);
-		when(exchange.getLastValue(null)).thenReturn(0.00445625);
-		verify(notify, timeout(2500).times(2)).trigger();
+		when(this.notify.trigger()).thenReturn(true);
+		when(this.exchange.getLastValue(null)).thenReturn(0.00445625);
+		verify(this.notify, timeout(2500).times(2)).trigger();
 	}
-	
+
 	@Test
 	public void testNoBoundHit() throws IOException {
-		when(notify.trigger()).thenReturn(false);
-		when(exchange.getLastValue(null)).thenReturn(0.0042523);
-		verify(notify, timeout(1500).never()).trigger();
+		when(this.notify.trigger()).thenReturn(false);
+		when(this.exchange.getLastValue(null)).thenReturn(0.0042523);
+		verify(this.notify, timeout(1500).never()).trigger();
 	}
 
 }

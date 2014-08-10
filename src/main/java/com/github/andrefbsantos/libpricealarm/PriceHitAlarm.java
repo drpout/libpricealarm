@@ -13,9 +13,10 @@ public class PriceHitAlarm extends Alarm {
 	private double upperBound;
 	private double lowerBound;
 
-	public PriceHitAlarm(Exchange exchange, Pair pair, Timer timer, long period, Notify notify,
-			double upperBound, double lowerBound) throws UpperBoundSmallerThanLowerBoundException {
-		super(exchange, pair, timer, period, notify);
+	public PriceHitAlarm(long id, Exchange exchange, Pair pair, Timer timer, long period,
+			Notify notify, double upperBound, double lowerBound)
+					throws UpperBoundSmallerThanLowerBoundException {
+		super(id, exchange, pair, timer, period, notify);
 		if (upperBound <= lowerBound) {
 			throw new UpperBoundSmallerThanLowerBoundException();
 		} else {
@@ -26,14 +27,14 @@ public class PriceHitAlarm extends Alarm {
 
 	@Override
 	public void run() {
-		lastValue = getExchangeLastValue();
-		if ((lowerBound != Double.NEGATIVE_INFINITY && lastValue <= lowerBound) || (upperBound != Double.POSITIVE_INFINITY && lastValue >= upperBound)) {
-			doReset(notify.trigger());
+		this.lastValue = this.getExchangeLastValue();
+		if ((this.lowerBound != Double.NEGATIVE_INFINITY && this.lastValue <= this.lowerBound) || (this.upperBound != Double.POSITIVE_INFINITY && this.lastValue >= this.upperBound)) {
+			this.doReset(this.notify.trigger());
 		}
 	}
 
 	public double getLowerBound() {
-		return lowerBound;
+		return this.lowerBound;
 	}
 
 	public void setLowerBound(double lowerBound) {
@@ -41,7 +42,7 @@ public class PriceHitAlarm extends Alarm {
 	}
 
 	public double getUpperBound() {
-		return upperBound;
+		return this.upperBound;
 	}
 
 	public void setUpperBound(double upperBound) {
