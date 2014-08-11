@@ -56,4 +56,8 @@ public class PriceVarAlarm extends Alarm {
 	public void setPercent(int percent) {
 		this.percent = percent;
 	}
+
+	public boolean isPercent() {
+		return percent == 0;
+	}
 }
