@@ -19,18 +19,21 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	private static final long serialVersionUID = 438506410563236110L;
 
 	private long id;
-	protected Exchange exchange;
-	protected Pair pair;
 	private boolean on;
-	private transient Timer timer;
 	private long period;
-	private Timestamp lastUpdateTimestamp;
+	private transient Timer timer;
+	private transient Exchange exchange;
+	private String exchangeCode;
+	private Pair pair;
 	protected double lastValue;
+	private Timestamp lastUpdateTimestamp;
 	protected Notify notify;
 
 	public Alarm(long id, Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
+		System.out.println(exchange.getClass().getSimpleName());
+		this.exchangeCode = exchange.getClass().getSimpleName();
 		this.pair = pair;
 		this.on = true;
 		this.timer = timer;
@@ -113,14 +116,17 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
 		try {
 			os.defaultWriteObject();
+			// os.writeChars(exchange.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void readObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
+	private void readObject(ObjectInputStream is)
+			throws IOException, ClassNotFoundException {
 		try {
 			is.defaultReadObject();
+			// System.out.println(is.readUTF());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,5 +152,12 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return the exchangeCode
+	 */
+	public String getExchangeCode() {
+		return exchangeCode;
 	}
 }
