@@ -9,7 +9,7 @@ public class PriceVarAlarm extends Alarm {
 	private double variation;
 	private int percent;
 
-	public PriceVarAlarm(long id, Exchange exchange, Pair pair, long period,
+	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period,
 			Notify notify, double variation) {
 		super(id, exchange, pair, period, notify);
 		this.variation = variation;
@@ -17,7 +17,7 @@ public class PriceVarAlarm extends Alarm {
 		this.lastValue = this.getExchangeLastValue();
 	}
 
-	public PriceVarAlarm(long id, Exchange exchange, Pair pair, long period,
+	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period,
 			Notify notify, int percent) {
 		super(id, exchange, pair, period, notify);
 		this.percent = percent;

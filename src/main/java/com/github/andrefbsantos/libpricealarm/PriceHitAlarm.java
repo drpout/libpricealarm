@@ -9,7 +9,7 @@ public class PriceHitAlarm extends Alarm {
 	private double upperBound;
 	private double lowerBound;
 
-	public PriceHitAlarm(long id, Exchange exchange, Pair pair, long period, Notify notify,
+	public PriceHitAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double upperBound, double lowerBound) throws UpperBoundSmallerThanLowerBoundException {
 		super(id, exchange, pair, period, notify);
 		if(upperBound <= lowerBound) {

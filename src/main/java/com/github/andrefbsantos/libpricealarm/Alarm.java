@@ -10,7 +10,7 @@ import com.github.andrefbsantos.libdynticker.core.Pair;
 public abstract class Alarm implements Serializable {
 
 	private static final long serialVersionUID = 438506410563236110L;
-	private long id;
+	private int id;
 	private boolean on;
 	private long period;
 	private transient Exchange exchange;
@@ -20,7 +20,7 @@ public abstract class Alarm implements Serializable {
 	private Timestamp lastUpdateTimestamp;
 	protected transient Notify notify;
 
-	public Alarm(long id, Exchange exchange, Pair pair, long period, Notify notify) {
+	public Alarm(int id, Exchange exchange, Pair pair, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
 		this.exchangeCode = exchange.getClass().getSimpleName();
@@ -88,11 +88,11 @@ public abstract class Alarm implements Serializable {
 		on = true;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
