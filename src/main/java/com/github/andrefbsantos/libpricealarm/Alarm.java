@@ -1,8 +1,6 @@
 package com.github.andrefbsantos.libpricealarm;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Timer;
@@ -32,10 +30,9 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	public Alarm(long id, Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
-		System.out.println(exchange.getClass().getSimpleName());
-		this.exchangeCode = exchange.getClass().getSimpleName();
+		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
-		this.on = true;
+		on = true;
 		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
@@ -44,23 +41,23 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void doReset(boolean reset) {
 		if (!reset) {
-			this.cancel();
-			this.on = false;
+			cancel();
+			on = false;
 		}
 	}
 
 	public Exchange getExchange() {
-		return this.exchange;
+		return exchange;
 	}
 
 	protected double getExchangeLastValue() {
 		double lastValue = this.lastValue;
 		try {
-			lastValue = this.exchange.getLastValue(this.pair);
-			if (this.lastUpdateTimestamp == null) {
-				this.lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
+			lastValue = exchange.getLastValue(pair);
+			if (lastUpdateTimestamp == null) {
+				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 			} else {
-				this.lastUpdateTimestamp.setTime(System.currentTimeMillis());
+				lastUpdateTimestamp.setTime(System.currentTimeMillis());
 			}
 		} catch (IOException e) {
 		}
@@ -68,72 +65,72 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	}
 
 	public double getLastValue() {
-		return this.lastValue;
+		return lastValue;
 	}
 
 	public Pair getPair() {
-		return this.pair;
+		return pair;
 	}
 
 	public long getPeriod() {
-		return this.period;
+		return period;
 	}
 
 	public boolean isOn() {
-		return this.on;
+		return on;
 	}
 
 	public void setPeriod(long period) {
 		this.period = period;
-		this.cancel();
-		this.timer.schedule(this, period, period);
+		cancel();
+		timer.schedule(this, period, period);
 	}
 
 	public void toggle() {
-		if (this.on) {
-			this.cancel();
-			this.on = false;
+		if (on) {
+			cancel();
+			on = false;
 		} else {
-			this.timer.schedule(this, this.period, this.period);
-			this.on = true;
+			timer.schedule(this, period, period);
+			on = true;
 		}
 	}
 
 	public void turnOff() {
-		if (this.on) {
-			this.cancel();
-			this.on = false;
+		if (on) {
+			cancel();
+			on = false;
 		}
 	}
 
 	public void turnOn() {
-		if (!this.on) {
-			this.timer.schedule(this, this.period, this.period);
-			this.on = true;
+		if (!on) {
+			timer.schedule(this, period, period);
+			on = true;
 		}
 	}
 
-	private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
-		try {
-			os.defaultWriteObject();
-			// os.writeChars(exchange.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void readObject(ObjectInputStream is)
-			throws IOException, ClassNotFoundException {
-		try {
-			is.defaultReadObject();
-			// System.out.println(is.readUTF());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	// private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
+	// try {
+	// os.defaultWriteObject();
+	// // os.writeChars(exchange.getName());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// private void readObject(ObjectInputStream is)
+	// throws IOException, ClassNotFoundException {
+	// try {
+	// is.defaultReadObject();
+	// // System.out.println(is.readUTF());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	public Timer getTimer() {
-		return this.timer;
+		return timer;
 	}
 
 	public void setTimer(Timer timer) {
@@ -141,8 +138,8 @@ public abstract class Alarm extends TimerTask implements Serializable {
 	}
 
 	public void resume() {
-		if (this.on) {
-			this.timer.schedule(this, this.period, this.period);
+		if (on) {
+			timer.schedule(this, period, period);
 		}
 	}
 
