@@ -1,53 +1,42 @@
 package com.github.andrefbsantos.libpricealarm;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.github.andrefbsantos.libdynticker.core.Exchange;
 import com.github.andrefbsantos.libdynticker.core.Pair;
 
-public abstract class Alarm extends TimerTask implements Serializable {
+public abstract class Alarm implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 438506410563236110L;
-
 	private long id;
 	private boolean on;
 	private long period;
-	private transient Timer timer;
 	private transient Exchange exchange;
 	private String exchangeCode;
 	private Pair pair;
 	protected double lastValue;
 	private Timestamp lastUpdateTimestamp;
-	protected Notify notify;
+	protected transient Notify notify;
 
-	public Alarm(long id, Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
+	public Alarm(long id, Exchange exchange, Pair pair, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
-		System.out.println(exchange.getClass().getSimpleName());
 		this.exchangeCode = exchange.getClass().getSimpleName();
 		this.pair = pair;
 		this.on = true;
-		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
-		timer.schedule(this, period, period);
 	}
 
-	public void doReset(boolean reset) {
-		if (!reset) {
-			this.cancel();
-			this.on = false;
-		}
-	}
+	/**
+	 * Runs the logic behind the alarm and triggers a notification if the
+	 * alarm conditions are met.
+	 *
+	 * @return true if alarm should be reset, false if it should be turned off
+	 */
+	public abstract boolean run();
 
 	public Exchange getExchange() {
 		return this.exchange;
@@ -57,7 +46,7 @@ public abstract class Alarm extends TimerTask implements Serializable {
 		double lastValue = this.lastValue;
 		try {
 			lastValue = this.exchange.getLastValue(this.pair);
-			if (this.lastUpdateTimestamp == null) {
+			if(this.lastUpdateTimestamp == null) {
 				this.lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 			} else {
 				this.lastUpdateTimestamp.setTime(System.currentTimeMillis());
@@ -85,65 +74,18 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void setPeriod(long period) {
 		this.period = period;
-		this.cancel();
-		this.timer.schedule(this, period, period);
 	}
 
 	public void toggle() {
-		if (this.on) {
-			this.cancel();
-			this.on = false;
-		} else {
-			this.timer.schedule(this, this.period, this.period);
-			this.on = true;
-		}
+		on = !on;
 	}
 
 	public void turnOff() {
-		if (this.on) {
-			this.cancel();
-			this.on = false;
-		}
+		on = false;
 	}
 
 	public void turnOn() {
-		if (!this.on) {
-			this.timer.schedule(this, this.period, this.period);
-			this.on = true;
-		}
-	}
-
-	private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
-		try {
-			os.defaultWriteObject();
-			// os.writeChars(exchange.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void readObject(ObjectInputStream is)
-			throws IOException, ClassNotFoundException {
-		try {
-			is.defaultReadObject();
-			// System.out.println(is.readUTF());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Timer getTimer() {
-		return this.timer;
-	}
-
-	public void setTimer(Timer timer) {
-		this.timer = timer;
-	}
-
-	public void resume() {
-		if (this.on) {
-			this.timer.schedule(this, this.period, this.period);
-		}
+		on = true;
 	}
 
 	public long getId() {
@@ -154,10 +96,15 @@ public abstract class Alarm extends TimerTask implements Serializable {
 		this.id = id;
 	}
 
-	/**
-	 * @return the exchangeCode
-	 */
 	public String getExchangeCode() {
 		return exchangeCode;
+	}
+
+	public Notify getNotify() {
+		return notify;
+	}
+
+	public void setNotify(Notify notify) {
+		this.notify = notify;
 	}
 }
