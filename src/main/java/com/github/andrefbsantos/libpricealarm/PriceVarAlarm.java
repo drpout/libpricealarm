@@ -17,32 +17,32 @@ public class PriceVarAlarm extends Alarm {
 			Notify notify, double variation) {
 		super(id, exchange, pair, timer, period, notify);
 		this.variation = variation;
-		this.percent = 0;
-		this.lastValue = this.getExchangeLastValue();
+		percent = 0;
+		lastValue = getExchangeLastValue();
 	}
 
 	public PriceVarAlarm(long id, Exchange exchange, Pair pair, Timer timer, long period,
 			Notify notify, int percent) {
 		super(id, exchange, pair, timer, period, notify);
 		this.percent = percent;
-		this.lastValue = this.getExchangeLastValue();
-		this.variation = this.lastValue * (percent * 0.01);
+		lastValue = getExchangeLastValue();
+		variation = lastValue * (percent * 0.01);
 	}
 
 	@Override
 	public void run() {
-		double newValue = this.getExchangeLastValue();
-		if (Math.abs(this.lastValue - newValue) >= this.variation) {
-			this.doReset(this.notify.trigger());
+		double newValue = getExchangeLastValue();
+		if (Math.abs(lastValue - newValue) >= variation) {
+			doReset(notify.trigger());
 		}
-		this.lastValue = newValue;
-		if (this.percent > 0) {
-			this.variation = this.lastValue * (this.percent * 0.01);
+		lastValue = newValue;
+		if (percent > 0) {
+			variation = lastValue * (percent * 0.01);
 		}
 	}
 
 	public double getVariation() {
-		return this.variation;
+		return variation;
 	}
 
 	public void setVariation(double variation) {
@@ -50,7 +50,7 @@ public class PriceVarAlarm extends Alarm {
 	}
 
 	public int getPercent() {
-		return this.percent;
+		return percent;
 	}
 
 	public void setPercent(int percent) {
@@ -58,6 +58,6 @@ public class PriceVarAlarm extends Alarm {
 	}
 
 	public boolean isPercent() {
-		return percent == 0;
+		return percent > 0;
 	}
 }

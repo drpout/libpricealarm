@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Timer;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,60 +24,69 @@ public class PriceVarAlarmTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.notify = mock(Notify.class);
-		this.exchange = mock(Exchange.class);
-		this.timer = new Timer();
+		notify = mock(Notify.class);
+		exchange = mock(Exchange.class);
+		timer = new Timer();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		this.testAlarm.turnOff();
+		testAlarm.turnOff();
 	}
 
 	@Test
 	public void testVarNoReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(false);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004);
-		this.testAlarm = new PriceVarAlarm(1, this.exchange, null, this.timer, 1000, this.notify, 0.001);
-		verify(this.notify, timeout(1500).never()).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.005);
-		verify(this.notify, timeout(1000).times(1)).trigger();
+		when(notify.trigger()).thenReturn(false);
+		when(exchange.getLastValue(null)).thenReturn(0.004);
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 0.001);
+		verify(notify, timeout(1500).never()).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.005);
+		verify(notify, timeout(1000).times(1)).trigger();
 	}
 
 	@Test
 	public void testVarReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(true);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004);
-		this.testAlarm = new PriceVarAlarm(1, this.exchange, null, this.timer, 1000, this.notify, 0.001);
-		verify(this.notify, timeout(1500).never()).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.005);
-		verify(this.notify, timeout(1000).times(1)).trigger();
-		verify(this.notify, timeout(1000).times(1)).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.006);
-		verify(this.notify, timeout(1000).times(2)).trigger();
+		when(notify.trigger()).thenReturn(true);
+		when(exchange.getLastValue(null)).thenReturn(0.004);
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 0.001);
+		verify(notify, timeout(1500).never()).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.005);
+		verify(notify, timeout(1000).times(1)).trigger();
+		verify(notify, timeout(1000).times(1)).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.006);
+		verify(notify, timeout(1000).times(2)).trigger();
 	}
 
 	@Test
 	public void testPercentNoReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(false);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004);
-		this.testAlarm = new PriceVarAlarm(1, this.exchange, null, this.timer, 1000, this.notify, 50);
-		verify(this.notify, timeout(1500).never()).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.006);
-		verify(this.notify, timeout(1000).times(1)).trigger();
+		when(notify.trigger()).thenReturn(false);
+		when(exchange.getLastValue(null)).thenReturn(0.004);
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 50);
+		verify(notify, timeout(1500).never()).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.006);
+		verify(notify, timeout(1000).times(1)).trigger();
 	}
 
 	@Test
 	public void testPercentReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(true);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004);
-		this.testAlarm = new PriceVarAlarm(1, this.exchange, null, this.timer, 1000, this.notify, 50);
-		verify(this.notify, timeout(1500).never()).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.006);
-		verify(this.notify, timeout(1000).times(1)).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.008);
-		verify(this.notify, timeout(1000).times(1)).trigger();
-		when(this.exchange.getLastValue(null)).thenReturn(0.012);
-		verify(this.notify, timeout(1000).times(2)).trigger();
+		when(notify.trigger()).thenReturn(true);
+		when(exchange.getLastValue(null)).thenReturn(0.004);
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 50);
+		verify(notify, timeout(1500).never()).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.006);
+		verify(notify, timeout(1000).times(1)).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.008);
+		verify(notify, timeout(1000).times(1)).trigger();
+		when(exchange.getLastValue(null)).thenReturn(0.012);
+		verify(notify, timeout(1000).times(2)).trigger();
+	}
+
+	public void testIsPercent() {
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 50);
+		Assert.assertTrue(testAlarm.isPercent());
+
+		testAlarm = new PriceVarAlarm(1, exchange, null, timer, 1000, notify, 2.0);
+		Assert.assertFalse(testAlarm.isPercent());
+
 	}
 }
