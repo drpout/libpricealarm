@@ -3,48 +3,41 @@ package com.github.andrefbsantos.libpricealarm;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.github.andrefbsantos.libdynticker.core.Exchange;
 import com.github.andrefbsantos.libdynticker.core.Pair;
 
-public abstract class Alarm extends TimerTask implements Serializable {
+public abstract class Alarm implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 438506410563236110L;
 
-	private long id;
+	private int id;
 	private boolean on;
 	private long period;
-	private transient Timer timer;
 	private transient Exchange exchange;
 	private String exchangeCode;
 	private Pair pair;
 	protected double lastValue;
 	private Timestamp lastUpdateTimestamp;
-	protected Notify notify;
+	protected transient Notify notify;
 
-	public Alarm(long id, Exchange exchange, Pair pair, Timer timer, long period, Notify notify) {
+	public Alarm(int id, Exchange exchange, Pair pair, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
 		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
 		on = true;
-		this.timer = timer;
 		this.period = period;
 		this.notify = notify;
-		timer.schedule(this, period, period);
 	}
 
-	public void doReset(boolean reset) {
-		if (!reset) {
-			cancel();
-			on = false;
-		}
-	}
+	/**
+	 * Runs the logic behind the alarm and triggers a notification if the
+	 * alarm conditions are met.
+	 *
+	 * @return true if alarm should be reset, false if it should be turned off
+	 */
+	public abstract boolean run();
 
 	public Exchange getExchange() {
 		return exchange;
@@ -82,79 +75,41 @@ public abstract class Alarm extends TimerTask implements Serializable {
 
 	public void setPeriod(long period) {
 		this.period = period;
-		cancel();
-		timer.schedule(this, period, period);
 	}
 
 	public void toggle() {
-		if (on) {
-			cancel();
-			on = false;
-		} else {
-			timer.schedule(this, period, period);
-			on = true;
-		}
+		on = !on;
 	}
 
 	public void turnOff() {
-		if (on) {
-			cancel();
-			on = false;
-		}
+		on = false;
 	}
 
 	public void turnOn() {
-		if (!on) {
-			timer.schedule(this, period, period);
-			on = true;
-		}
+		on = true;
 	}
 
-	// private void writeObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
-	// try {
-	// os.defaultWriteObject();
-	// // os.writeChars(exchange.getName());
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// private void readObject(ObjectInputStream is)
-	// throws IOException, ClassNotFoundException {
-	// try {
-	// is.defaultReadObject();
-	// // System.out.println(is.readUTF());
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-
-	public Timer getTimer() {
-		return timer;
-	}
-
-	public void setTimer(Timer timer) {
-		this.timer = timer;
-	}
-
-	public void resume() {
-		if (on) {
-			timer.schedule(this, period, period);
-		}
-	}
-
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the exchangeCode
-	 */
 	public String getExchangeCode() {
 		return exchangeCode;
+	}
+
+	public Notify getNotify() {
+		return notify;
+	}
+
+	public void setNotify(Notify notify) {
+		this.notify = notify;
+	}
+
+	public void setExchange(Exchange exchange) {
+		this.exchange = exchange;
 	}
 }

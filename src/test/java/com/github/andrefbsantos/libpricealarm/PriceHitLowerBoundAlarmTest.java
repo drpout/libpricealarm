@@ -17,41 +17,43 @@ import com.github.andrefbsantos.libdynticker.core.Exchange;
 public class PriceHitLowerBoundAlarmTest {
 
 	private PriceHitLowerBoundAlarm testAlarm;
+	private TimerTaskAlarmWrapper wrapper;
 	private Notify notify;
 	private Exchange exchange;
 
 	@Before
 	public void setUp() throws Exception {
-		this.notify = mock(Notify.class);
-		this.exchange = mock(Exchange.class);
+		notify = mock(Notify.class);
+		exchange = mock(Exchange.class);
 		Timer timer = new Timer();
-		this.testAlarm = new PriceHitLowerBoundAlarm(1, this.exchange, null, timer, 1000, this.notify, 0.0042);
+		testAlarm = new PriceHitLowerBoundAlarm(1, exchange, null, 1000, notify, 0.0042);
+		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		this.testAlarm.turnOff();
+		wrapper.turnOff();
 	}
 
 	@Test
 	public void testLowerBoundNoReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(false);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004123);
-		verify(this.notify, timeout(1500).times(1)).trigger();
+		when(notify.trigger()).thenReturn(false);
+		when(exchange.getLastValue(null)).thenReturn(0.004123);
+		verify(notify, timeout(1500).times(1)).trigger();
 	}
 
 	@Test
 	public void testLowerBoundAndReset() throws IOException {
-		when(this.notify.trigger()).thenReturn(true);
-		when(this.exchange.getLastValue(null)).thenReturn(0.004123);
-		verify(this.notify, timeout(2500).times(2)).trigger();
+		when(notify.trigger()).thenReturn(true);
+		when(exchange.getLastValue(null)).thenReturn(0.004123);
+		verify(notify, timeout(2500).times(2)).trigger();
 	}
 
 	@Test
 	public void testNoBoundHit() throws IOException {
-		when(this.notify.trigger()).thenReturn(false);
-		when(this.exchange.getLastValue(null)).thenReturn(0.0042523);
-		verify(this.notify, timeout(1500).never()).trigger();
+		when(notify.trigger()).thenReturn(false);
+		when(exchange.getLastValue(null)).thenReturn(0.0042523);
+		verify(notify, timeout(1500).never()).trigger();
 	}
 
 }
