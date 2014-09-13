@@ -12,7 +12,7 @@ public class PriceHitAlarm extends Alarm {
 	public PriceHitAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double upperBound, double lowerBound) throws UpperBoundSmallerThanLowerBoundException {
 		super(id, exchange, pair, period, notify);
-		if(upperBound <= lowerBound) {
+		if (upperBound <= lowerBound) {
 			throw new UpperBoundSmallerThanLowerBoundException();
 		} else {
 			this.upperBound = upperBound;
@@ -23,9 +23,9 @@ public class PriceHitAlarm extends Alarm {
 	@Override
 	public boolean run() {
 		lastValue = getExchangeLastValue();
-		if((lowerBound != Double.NEGATIVE_INFINITY && lastValue <= lowerBound)
+		if ((lowerBound != Double.NEGATIVE_INFINITY && lastValue <= lowerBound)
 				|| (upperBound != Double.POSITIVE_INFINITY && lastValue >= upperBound)) {
-			return notify.trigger();
+			return notify.trigger(getId());
 		}
 		return true;
 	}

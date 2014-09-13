@@ -8,6 +8,6 @@ public interface Notify extends Serializable {
 	 *
 	 * @return true if alarm should be reset, false if it should be turned off
 	 */
-	public boolean trigger();
+	public boolean trigger(int alarmID);
 
 }
