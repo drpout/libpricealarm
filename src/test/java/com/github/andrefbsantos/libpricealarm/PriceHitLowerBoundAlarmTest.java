@@ -20,13 +20,14 @@ public class PriceHitLowerBoundAlarmTest {
 	private TimerTaskAlarmWrapper wrapper;
 	private Notify notify;
 	private Exchange exchange;
+	private static final int alarmID = 1;
 
 	@Before
 	public void setUp() throws Exception {
 		notify = mock(Notify.class);
 		exchange = mock(Exchange.class);
 		Timer timer = new Timer();
-		testAlarm = new PriceHitLowerBoundAlarm(1, exchange, null, 1000, notify, 0.0042);
+		testAlarm = new PriceHitLowerBoundAlarm(alarmID, exchange, null, 1000, notify, 0.0042);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 	}
 
@@ -37,23 +38,23 @@ public class PriceHitLowerBoundAlarmTest {
 
 	@Test
 	public void testLowerBoundNoReset() throws IOException {
-		when(notify.trigger()).thenReturn(false);
+		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(null)).thenReturn(0.004123);
-		verify(notify, timeout(1500).times(1)).trigger();
+		verify(notify, timeout(1500).times(1)).trigger(alarmID);
 	}
 
 	@Test
 	public void testLowerBoundAndReset() throws IOException {
-		when(notify.trigger()).thenReturn(true);
+		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(null)).thenReturn(0.004123);
-		verify(notify, timeout(2500).times(2)).trigger();
+		verify(notify, timeout(2500).times(2)).trigger(alarmID);
 	}
 
 	@Test
 	public void testNoBoundHit() throws IOException {
-		when(notify.trigger()).thenReturn(false);
+		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(null)).thenReturn(0.0042523);
-		verify(notify, timeout(1500).never()).trigger();
+		verify(notify, timeout(1500).never()).trigger(alarmID);
 	}
 
 }
