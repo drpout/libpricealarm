@@ -19,7 +19,7 @@ public abstract class Alarm implements Serializable {
 	private Pair pair;
 	protected double lastValue;
 	private Timestamp lastUpdateTimestamp;
-	protected transient Notify notify;
+	protected Notify notify;
 
 	public Alarm(int id, Exchange exchange, Pair pair, long period, Notify notify) {
 		this.id = id;
@@ -47,12 +47,12 @@ public abstract class Alarm implements Serializable {
 		double lastValue = this.lastValue;
 		try {
 			lastValue = exchange.getLastValue(pair);
-			if (lastUpdateTimestamp == null) {
+			if(lastUpdateTimestamp == null) {
 				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 			} else {
 				lastUpdateTimestamp.setTime(System.currentTimeMillis());
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 		}
 		return lastValue;
 	}
