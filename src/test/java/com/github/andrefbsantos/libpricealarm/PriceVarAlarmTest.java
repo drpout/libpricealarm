@@ -39,7 +39,7 @@ public class PriceVarAlarmTest {
 	public void testVarNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(null)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 0.001);
+		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(null)).thenReturn(0.005);
@@ -50,7 +50,7 @@ public class PriceVarAlarmTest {
 	public void testVarReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(null)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 0.001);
+		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(null)).thenReturn(0.005);
@@ -64,7 +64,7 @@ public class PriceVarAlarmTest {
 	public void testPercentNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(null)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 50);
+		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(null)).thenReturn(0.006);
@@ -75,7 +75,7 @@ public class PriceVarAlarmTest {
 	public void testPercentReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(null)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 50);
+		testAlarm = new PriceVarAlarm(alarmID, exchange, null, 1000, notify, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(null)).thenReturn(0.006);

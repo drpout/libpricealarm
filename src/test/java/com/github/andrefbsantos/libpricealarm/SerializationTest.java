@@ -36,7 +36,7 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitAlarmSerialization() throws IOException, ClassNotFoundException,
-			UpperBoundSmallerThanLowerBoundException {
+	UpperBoundSmallerThanLowerBoundException {
 
 		testAlarm = new PriceHitAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 600, 580);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -67,7 +67,7 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitLowerBoundAlarmSerialization() throws IOException,
-			ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
+	ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
 		testAlarm = new PriceHitLowerBoundAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 0.001);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
@@ -96,7 +96,7 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitUpperBoundAlarmSerialization() throws IOException,
-			ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
+	ClassNotFoundException, UpperBoundSmallerThanLowerBoundException {
 		testAlarm = new PriceHitUpperBoundAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 0.001);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
@@ -143,8 +143,8 @@ public class SerializationTest {
 		byteArrayInputStream.close();
 		Assert.assertNotNull(newAlarm);
 		Assert.assertTrue(newAlarm instanceof PriceVarAlarm);
-		Assert.assertEquals(((PriceVarAlarm) testAlarm).getPercent(), ((PriceVarAlarm) newAlarm).getPercent());
-		Assert.assertEquals(((PriceVarAlarm) testAlarm).getVariation(), ((PriceVarAlarm) newAlarm).getVariation(), 0.001);
+		Assert.assertEquals(((PriceVarAlarm) testAlarm).getPercent(), ((PriceVarAlarm) newAlarm).getPercent(), 0);
+		Assert.assertEquals(((PriceVarAlarm) testAlarm).getVariation(), ((PriceVarAlarm) newAlarm).getVariation(), 0);
 
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());

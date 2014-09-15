@@ -7,7 +7,7 @@ public class PriceVarAlarm extends Alarm {
 
 	private static final long serialVersionUID = -5424769817492896869L;
 	private double variation;
-	private int percent;
+	private float percent;
 
 	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double variation) {
@@ -18,7 +18,7 @@ public class PriceVarAlarm extends Alarm {
 	}
 
 	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
-			int percent) {
+			float percent) {
 		super(id, exchange, pair, period, notify);
 		this.percent = percent;
 		lastValue = getExchangeLastValue();
@@ -29,11 +29,11 @@ public class PriceVarAlarm extends Alarm {
 	public boolean run() {
 		boolean ret = true;
 		double newValue = getExchangeLastValue();
-		if (Math.abs(lastValue - newValue) >= variation) {
+		if(Math.abs(lastValue - newValue) >= variation) {
 			ret = notify.trigger(getId());
 		}
 		lastValue = newValue;
-		if (percent > 0) {
+		if(percent > 0) {
 			variation = lastValue * (percent * 0.01);
 		}
 		return ret;
@@ -47,11 +47,11 @@ public class PriceVarAlarm extends Alarm {
 		this.variation = variation;
 	}
 
-	public int getPercent() {
+	public float getPercent() {
 		return percent;
 	}
 
-	public void setPercent(int percent) {
+	public void setPercent(float percent) {
 		this.percent = percent;
 	}
 
