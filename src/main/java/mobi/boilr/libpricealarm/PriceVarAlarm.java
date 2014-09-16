@@ -1,5 +1,7 @@
 package mobi.boilr.libpricealarm;
 
+import java.io.IOException;
+
 import mobi.boilr.libdynticker.core.Exchange;
 import mobi.boilr.libdynticker.core.Pair;
 
@@ -10,7 +12,7 @@ public class PriceVarAlarm extends Alarm {
 	private float percent;
 
 	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
-			double variation) {
+			double variation) throws NumberFormatException, IOException {
 		super(id, exchange, pair, period, notify);
 		this.variation = variation;
 		percent = 0;
@@ -18,7 +20,7 @@ public class PriceVarAlarm extends Alarm {
 	}
 
 	public PriceVarAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
-			float percent) {
+			float percent) throws NumberFormatException, IOException {
 		super(id, exchange, pair, period, notify);
 		this.percent = percent;
 		lastValue = getExchangeLastValue();
@@ -26,7 +28,7 @@ public class PriceVarAlarm extends Alarm {
 	}
 
 	@Override
-	public boolean run() {
+	public boolean run() throws NumberFormatException, IOException {
 		boolean ret = true;
 		double newValue = getExchangeLastValue();
 		if(Math.abs(lastValue - newValue) >= variation) {

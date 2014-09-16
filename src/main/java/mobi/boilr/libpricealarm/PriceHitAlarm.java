@@ -1,5 +1,7 @@
 package mobi.boilr.libpricealarm;
 
+import java.io.IOException;
+
 import mobi.boilr.libdynticker.core.Exchange;
 import mobi.boilr.libdynticker.core.Pair;
 
@@ -21,7 +23,7 @@ public class PriceHitAlarm extends Alarm {
 	}
 
 	@Override
-	public boolean run() {
+	public boolean run() throws NumberFormatException, IOException {
 		lastValue = getExchangeLastValue();
 		if ((lowerBound != Double.NEGATIVE_INFINITY && lastValue <= lowerBound)
 				|| (upperBound != Double.POSITIVE_INFINITY && lastValue >= upperBound)) {

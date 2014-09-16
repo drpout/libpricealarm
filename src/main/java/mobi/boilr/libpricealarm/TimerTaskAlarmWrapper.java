@@ -1,5 +1,6 @@
 package mobi.boilr.libpricealarm;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,9 +19,13 @@ public class TimerTaskAlarmWrapper extends TimerTask implements Serializable {
 
 	@Override
 	public void run() {
-		if(!alarm.run()) {
-			cancel();
-			alarm.turnOff();
+		try {
+			if(!alarm.run()) {
+				cancel();
+				alarm.turnOff();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

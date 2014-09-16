@@ -36,23 +36,22 @@ public abstract class Alarm implements Serializable {
 	 * alarm conditions are met.
 	 *
 	 * @return true if alarm should be reset, false if it should be turned off
+	 * @throws IOException 
+	 * @throws NumberFormatException 
 	 */
-	public abstract boolean run();
+	public abstract boolean run() throws NumberFormatException, IOException;
 
 	public Exchange getExchange() {
 		return exchange;
 	}
 
-	protected double getExchangeLastValue() {
+	protected double getExchangeLastValue() throws NumberFormatException, IOException {
 		double lastValue = this.lastValue;
-		try {
-			lastValue = exchange.getLastValue(pair);
-			if(lastUpdateTimestamp == null) {
-				lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
-			} else {
-				lastUpdateTimestamp.setTime(System.currentTimeMillis());
-			}
-		} catch(IOException e) {
+		lastValue = exchange.getLastValue(pair);
+		if(lastUpdateTimestamp == null) {
+			lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
+		} else {
+			lastUpdateTimestamp.setTime(System.currentTimeMillis());
 		}
 		return lastValue;
 	}
