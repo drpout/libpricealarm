@@ -1,4 +1,4 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
 import static org.mockito.Mockito.mock;
 
@@ -14,8 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.andrefbsantos.libdynticker.bitstamp.BitstampExchange;
-import com.github.andrefbsantos.libdynticker.core.Pair;
+import mobi.boilr.libdynticker.bitstamp.BitstampExchange;
+import mobi.boilr.libdynticker.core.Pair;
 
 public class SerializationTest {
 

@@ -1,11 +1,11 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.github.andrefbsantos.libdynticker.core.Exchange;
-import com.github.andrefbsantos.libdynticker.core.Pair;
+import mobi.boilr.libdynticker.core.Exchange;
+import mobi.boilr.libdynticker.core.Pair;
 
 public abstract class Alarm implements Serializable {
 

@@ -1,4 +1,4 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
 public class UpperBoundSmallerThanLowerBoundException extends Exception {
 

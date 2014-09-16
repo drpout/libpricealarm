@@ -1,7 +1,7 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
-import com.github.andrefbsantos.libdynticker.core.Exchange;
-import com.github.andrefbsantos.libdynticker.core.Pair;
+import mobi.boilr.libdynticker.core.Exchange;
+import mobi.boilr.libdynticker.core.Pair;
 
 public class PriceVarAlarm extends Alarm {
 

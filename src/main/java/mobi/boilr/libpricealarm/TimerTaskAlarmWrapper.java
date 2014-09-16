@@ -1,4 +1,4 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
 import java.io.Serializable;
 import java.util.Timer;

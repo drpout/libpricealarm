@@ -1,4 +1,4 @@
-package com.github.andrefbsantos.libpricealarm;
+package mobi.boilr.libpricealarm;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.andrefbsantos.libdynticker.core.Exchange;
+import mobi.boilr.libdynticker.core.Exchange;
 
 public class PriceVarAlarmTest {
 
