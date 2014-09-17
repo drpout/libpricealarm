@@ -36,8 +36,8 @@ public abstract class Alarm implements Serializable {
 	 * alarm conditions are met.
 	 *
 	 * @return true if alarm should be reset, false if it should be turned off
-	 * @throws IOException 
-	 * @throws NumberFormatException 
+	 * @throws IOException
+	 * @throws NumberFormatException
 	 */
 	public abstract boolean run() throws NumberFormatException, IOException;
 
@@ -114,5 +114,11 @@ public abstract class Alarm implements Serializable {
 
 	public Timestamp getLastUpdateTimestamp() {
 		return lastUpdateTimestamp;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " " + pair.getCoin() +
+				" " + pair.getExchange() + " " + exchange.getName();
 	}
 }
