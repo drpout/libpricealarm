@@ -110,6 +110,10 @@ public abstract class Alarm implements Serializable {
 
 	public void setExchange(Exchange exchange) {
 		this.exchange = exchange;
+		this.exchangeCode = exchange.getClass().getCanonicalName();
+	}
+	public void setPair(Pair pair){
+		this.pair = pair;
 	}
 
 	public Timestamp getLastUpdateTimestamp() {
