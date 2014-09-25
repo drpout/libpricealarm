@@ -126,8 +126,8 @@ public class SerializationTest {
 	}
 
 	@Test
-	public void testPriceVarAlarmSerialization() throws IOException, ClassNotFoundException {
-		testAlarm = new PriceVarAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 50);
+	public void testPriceChangeAlarmSerialization() throws IOException, ClassNotFoundException {
+		testAlarm = new PriceChangeAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 50);
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;
 		objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -138,13 +138,13 @@ public class SerializationTest {
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 		ObjectInputStream in = null;
 		in = new ObjectInputStream(byteArrayInputStream);
-		newAlarm = (PriceVarAlarm) in.readObject();
+		newAlarm = (PriceChangeAlarm) in.readObject();
 		in.close();
 		byteArrayInputStream.close();
 		Assert.assertNotNull(newAlarm);
-		Assert.assertTrue(newAlarm instanceof PriceVarAlarm);
-		Assert.assertEquals(((PriceVarAlarm) testAlarm).getPercent(), ((PriceVarAlarm) newAlarm).getPercent(), 0);
-		Assert.assertEquals(((PriceVarAlarm) testAlarm).getVariation(), ((PriceVarAlarm) newAlarm).getVariation(), 0);
+		Assert.assertTrue(newAlarm instanceof PriceChangeAlarm);
+		Assert.assertEquals(((PriceChangeAlarm) testAlarm).getPercent(), ((PriceChangeAlarm) newAlarm).getPercent(), 0);
+		Assert.assertEquals(((PriceChangeAlarm) testAlarm).getChange(), ((PriceChangeAlarm) newAlarm).getChange(), 0);
 
 		Assert.assertEquals(testAlarm.getClass(), newAlarm.getClass());
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
@@ -156,7 +156,7 @@ public class SerializationTest {
 
 	@Test
 	public void testTimerTaskAlarmWrapperSerialization() throws IOException, ClassNotFoundException {
-		PriceVarAlarm testAlarm = new PriceVarAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 50);
+		PriceChangeAlarm testAlarm = new PriceChangeAlarm(1, new BitstampExchange(exchangeExpiredPeriod), new Pair("BTC", "USD"), 1000, notify, 50);
 		TimerTaskAlarmWrapper wrapper = new TimerTaskAlarmWrapper(testAlarm, new Timer());
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;

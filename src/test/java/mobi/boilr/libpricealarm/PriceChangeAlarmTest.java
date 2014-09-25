@@ -16,9 +16,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PriceVarAlarmTest {
+public class PriceChangeAlarmTest {
 
-	private PriceVarAlarm testAlarm;
+	private PriceChangeAlarm testAlarm;
 	private TimerTaskAlarmWrapper wrapper;
 	private Notify notify;
 	private Exchange exchange;
@@ -40,10 +40,10 @@ public class PriceVarAlarmTest {
 	}
 
 	@Test
-	public void testVarNoReset() throws IOException {
+	public void testChangeNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, pair, 1000, notify, 0.001d);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(pair)).thenReturn(0.005);
@@ -51,10 +51,10 @@ public class PriceVarAlarmTest {
 	}
 
 	@Test
-	public void testVarReset() throws IOException {
+	public void testChangeReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, pair, 1000, notify, 0.001d);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(pair)).thenReturn(0.005);
@@ -68,7 +68,7 @@ public class PriceVarAlarmTest {
 	public void testPercentNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, pair, 1000, notify, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
@@ -79,7 +79,7 @@ public class PriceVarAlarmTest {
 	public void testPercentReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, pair, 1000, notify, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
@@ -96,8 +96,8 @@ public class PriceVarAlarmTest {
 		when(pair.getExchange()).thenReturn("YYY");
 		when(exchange.getName()).thenReturn("DummyExchange");
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceVarAlarm(alarmID, exchange, pair, 1000, notify, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		Assert.assertEquals("PriceVarAlarm XXX YYY DummyExchange", testAlarm.toString());
+		Assert.assertEquals("PriceChangeAlarm XXX YYY DummyExchange", testAlarm.toString());
 	}
 }
