@@ -10,6 +10,7 @@ public class PriceChangeAlarm extends Alarm {
 	private static final long serialVersionUID = -5424769817492896869L;
 	private double change;
 	private float percent;
+	private double lastChange = 0;
 
 	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double change) throws NumberFormatException, IOException {
@@ -31,13 +32,15 @@ public class PriceChangeAlarm extends Alarm {
 	public boolean run() throws NumberFormatException, IOException {
 		boolean ret = true;
 		double newValue = getExchangeLastValue();
-		if(Math.abs(lastValue - newValue) >= change) {
+		lastChange = Math.abs(lastValue - newValue);
+		if(lastChange >= change) {
 			ret = notify.trigger(getId());
 		}
-		lastValue = newValue;
 		if(percent > 0) {
-			change = lastValue * (percent * 0.01);
+			change = newValue * (percent * 0.01);
+			lastChange = (lastChange / lastValue) * 100;
 		}
+		lastValue = newValue;
 		return ret;
 	}
 
@@ -59,5 +62,9 @@ public class PriceChangeAlarm extends Alarm {
 
 	public boolean isPercent() {
 		return percent != 0;
+	}
+
+	public double getLastChange() {
+		return lastChange;
 	}
 }
