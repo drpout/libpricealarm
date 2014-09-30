@@ -48,8 +48,9 @@ public class PriceChangeAlarm extends Alarm {
 		return change;
 	}
 
-	public void setChange(double variation) {
-		this.change = variation;
+	public void setChange(double change) {
+		this.change = change;
+		percent = 0;
 	}
 
 	public float getPercent() {
@@ -58,6 +59,7 @@ public class PriceChangeAlarm extends Alarm {
 
 	public void setPercent(float percent) {
 		this.percent = percent;
+		change = lastValue * (percent * 0.01);
 	}
 
 	public boolean isPercent() {
