@@ -45,7 +45,7 @@ public abstract class Alarm implements Serializable {
 		return exchange;
 	}
 
-	protected double getExchangeLastValue() throws NumberFormatException, IOException {
+	public double getExchangeLastValue() throws NumberFormatException, IOException {
 		double lastValue = this.lastValue;
 		lastValue = exchange.getLastValue(pair);
 		if(lastUpdateTimestamp == null) {
@@ -58,6 +58,10 @@ public abstract class Alarm implements Serializable {
 
 	public double getLastValue() {
 		return lastValue;
+	}
+
+	public void setLastValue(double lastValue) {
+		this.lastValue = lastValue;
 	}
 
 	public Pair getPair() {
@@ -112,7 +116,8 @@ public abstract class Alarm implements Serializable {
 		this.exchange = exchange;
 		this.exchangeCode = exchange.getClass().getCanonicalName();
 	}
-	public void setPair(Pair pair){
+
+	public void setPair(Pair pair) {
 		this.pair = pair;
 	}
 
