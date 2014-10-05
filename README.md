@@ -1,6 +1,8 @@
 # libpricealarm
 
-Java alarms triggered when price crosses a boundary or surpasses given variation.
+Java alarms triggered when price of a cryptocurrency or bullion crosses a boundary or surpasses a given change.
+
+Uses [libdynticker](https://github.com/andrefbsantos/libdynticker) to get data from the exchanges.
 
 ## Building
 Run `mvn process-resources` once to make Maven aware of the plugins we use to download and install dependencies which are not in Maven repositories. For then on you can run `mvn package` to create a jar.
