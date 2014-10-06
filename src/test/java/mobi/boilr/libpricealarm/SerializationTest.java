@@ -14,8 +14,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import mobi.boilr.libdynticker.bitstamp.BitstampExchange;
 import mobi.boilr.libdynticker.core.Pair;
+import mobi.boilr.libdynticker.exchanges.BitstampExchange;
 
 public class SerializationTest {
 
