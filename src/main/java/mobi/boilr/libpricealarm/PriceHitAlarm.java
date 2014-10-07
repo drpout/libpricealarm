@@ -8,47 +8,47 @@ import mobi.boilr.libdynticker.core.Pair;
 public class PriceHitAlarm extends Alarm {
 
 	private static final long serialVersionUID = 7243560546256303827L;
-	private double upperBound;
-	private double lowerBound;
+	private double upperLimit;
+	private double lowerLimit;
 
 	public PriceHitAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
-			double upperBound, double lowerBound) throws UpperBoundSmallerThanLowerBoundException {
+			double upperLimit, double lowerLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
 		super(id, exchange, pair, period, notify);
-		if(upperBound <= lowerBound) {
-			throw new UpperBoundSmallerThanLowerBoundException();
+		if(upperLimit <= lowerLimit) {
+			throw new UpperLimitSmallerOrEqualLowerLimitException();
 		} else {
-			this.upperBound = upperBound;
-			this.lowerBound = lowerBound;
+			this.upperLimit = upperLimit;
+			this.lowerLimit = lowerLimit;
 		}
 	}
 
 	@Override
 	public boolean run() throws NumberFormatException, IOException {
 		lastValue = getExchangeLastValue();
-		if((lowerBound != Double.NEGATIVE_INFINITY && lastValue <= lowerBound)
-				|| (upperBound != Double.POSITIVE_INFINITY && lastValue >= upperBound)) {
+		if((lowerLimit != Double.NEGATIVE_INFINITY && lastValue <= lowerLimit)
+				|| (upperLimit != Double.POSITIVE_INFINITY && lastValue >= upperLimit)) {
 			return notify.trigger(getId());
 		}
 		return true;
 	}
 
-	public double getLowerBound() {
-		return this.lowerBound;
+	public double getLowerLimit() {
+		return this.lowerLimit;
 	}
 
-	public void setLowerBound(double lowerBound) throws UpperBoundSmallerThanLowerBoundException {
-		if(lowerBound >= upperBound)
-			throw new UpperBoundSmallerThanLowerBoundException();
-		this.lowerBound = lowerBound;
+	public void setLowerLimit(double lowerLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
+		if(lowerLimit >= upperLimit)
+			throw new UpperLimitSmallerOrEqualLowerLimitException();
+		this.lowerLimit = lowerLimit;
 	}
 
-	public double getUpperBound() {
-		return this.upperBound;
+	public double getUpperLimit() {
+		return this.upperLimit;
 	}
 
-	public void setUpperBound(double upperBound) throws UpperBoundSmallerThanLowerBoundException {
-		if(upperBound <= lowerBound)
-			throw new UpperBoundSmallerThanLowerBoundException();
-		this.upperBound = upperBound;
+	public void setUpperLimit(double upperLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
+		if(upperLimit <= lowerLimit)
+			throw new UpperLimitSmallerOrEqualLowerLimitException();
+		this.upperLimit = upperLimit;
 	}
 }

@@ -16,9 +16,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PriceHitUpperBoundAlarmTest {
+public class PriceHitLowerLimitAlarmTest {
 
-	private PriceHitUpperBoundAlarm testAlarm;
+	private PriceHitLowerLimitAlarm testAlarm;
 	private TimerTaskAlarmWrapper wrapper;
 	private Notify notify;
 	private Exchange exchange;
@@ -31,7 +31,7 @@ public class PriceHitUpperBoundAlarmTest {
 		exchange = mock(Exchange.class);
 		pair = mock(Pair.class);
 		Timer timer = new Timer();
-		testAlarm = new PriceHitUpperBoundAlarm(alarmID, exchange, pair, 1000, notify, 0.0043);
+		testAlarm = new PriceHitLowerLimitAlarm(alarmID, exchange, pair, 1000, notify, 0.0042);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 	}
 
@@ -41,21 +41,21 @@ public class PriceHitUpperBoundAlarmTest {
 	}
 
 	@Test
-	public void testUpperBoundNoReset() throws IOException {
+	public void testLowerLimitNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
-		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
+		when(exchange.getLastValue(pair)).thenReturn(0.004123);
 		verify(notify, timeout(1500).times(1)).trigger(alarmID);
 	}
 
 	@Test
-	public void testUpperBoundAndReset() throws IOException {
+	public void testLowerLimitAndReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
-		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
+		when(exchange.getLastValue(pair)).thenReturn(0.004123);
 		verify(notify, timeout(2500).times(2)).trigger(alarmID);
 	}
 
 	@Test
-	public void testNoBoundHit() throws IOException {
+	public void testNoLimitHit() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.0042523);
 		verify(notify, timeout(1500).never()).trigger(alarmID);
@@ -66,7 +66,7 @@ public class PriceHitUpperBoundAlarmTest {
 		when(pair.getCoin()).thenReturn("XXX");
 		when(pair.getExchange()).thenReturn("YYY");
 		when(exchange.getName()).thenReturn("DummyExchange");
-		Assert.assertEquals("PriceHitUpperBoundAlarm XXX YYY DummyExchange", testAlarm.toString());
+		Assert.assertEquals("PriceHitLowerLimitAlarm XXX YYY DummyExchange", testAlarm.toString());
 	}
 
 }
