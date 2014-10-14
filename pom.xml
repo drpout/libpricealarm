@@ -6,7 +6,7 @@
 	<groupId>mobi.boilr.libpricealarm</groupId>
 	<artifactId>libpricealarm</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
 	<inceptionYear>2014</inceptionYear>

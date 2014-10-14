@@ -50,6 +50,7 @@ public class PriceChangeAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.005);
 		verify(notify, timeout(1000).times(1)).trigger(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
+		Assert.assertEquals(1000, testAlarm.getElapsedMilis(), 100);
 	}
 
 	@Test
@@ -69,6 +70,7 @@ public class PriceChangeAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notify, timeout(1000).times(2)).trigger(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
+		Assert.assertEquals(1000, testAlarm.getElapsedMilis(), 100);
 	}
 
 	@Test
@@ -82,6 +84,7 @@ public class PriceChangeAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notify, timeout(1000).times(1)).trigger(alarmID);
 		Assert.assertEquals(50, testAlarm.getLastChange(), 0);
+		Assert.assertEquals(1000, testAlarm.getElapsedMilis(), 100);
 	}
 
 	@Test
@@ -102,6 +105,7 @@ public class PriceChangeAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.012);
 		verify(notify, timeout(1000).times(2)).trigger(alarmID);
 		// Assert.assertEquals(50, testAlarm.getLastChange(), 0);
+		Assert.assertEquals(1000, testAlarm.getElapsedMilis(), 100);
 	}
 
 	@Test

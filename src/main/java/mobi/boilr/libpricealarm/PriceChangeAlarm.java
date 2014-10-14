@@ -11,6 +11,7 @@ public class PriceChangeAlarm extends Alarm {
 	private double change;
 	private float percent;
 	private double lastChange = 0;
+	private long elapsedMilis = 0;
 
 	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double change) throws NumberFormatException, IOException {
@@ -31,7 +32,9 @@ public class PriceChangeAlarm extends Alarm {
 	@Override
 	public boolean run() throws NumberFormatException, IOException {
 		boolean ret = true;
+		long prevMilis = getLastUpdateTimestamp().getTime();
 		double newValue = getExchangeLastValue();
+		elapsedMilis = getLastUpdateTimestamp().getTime() - prevMilis;
 		lastChange = Math.abs(lastValue - newValue);
 		if(lastChange >= change) {
 			ret = notify.trigger(getId());
@@ -68,5 +71,9 @@ public class PriceChangeAlarm extends Alarm {
 
 	public double getLastChange() {
 		return lastChange;
+	}
+
+	public long getElapsedMilis() {
+		return elapsedMilis;
 	}
 }
