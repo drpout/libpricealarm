@@ -10,9 +10,11 @@ public class PriceHitAlarm extends Alarm {
 	private static final long serialVersionUID = 7243560546256303827L;
 	private double upperLimit;
 	private double lowerLimit;
+	private boolean wasUpperLimitHit = false;
 
 	public PriceHitAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
-			double upperLimit, double lowerLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
+			double upperLimit, double lowerLimit)
+					throws UpperLimitSmallerOrEqualLowerLimitException {
 		super(id, exchange, pair, period, notify);
 		if(upperLimit <= lowerLimit) {
 			throw new UpperLimitSmallerOrEqualLowerLimitException();
@@ -25,11 +27,14 @@ public class PriceHitAlarm extends Alarm {
 	@Override
 	public boolean run() throws NumberFormatException, IOException {
 		lastValue = getExchangeLastValue();
-		if((lowerLimit != Double.NEGATIVE_INFINITY && lastValue <= lowerLimit)
-				|| (upperLimit != Double.POSITIVE_INFINITY && lastValue >= upperLimit)) {
-			return notify.trigger(getId());
+		if(lastValue <= lowerLimit) {
+			wasUpperLimitHit = true;
+		} else if(lastValue >= upperLimit) {
+			wasUpperLimitHit = false;
+		} else {
+			return true;
 		}
-		return true;
+		return notify.trigger(getId());
 	}
 
 	public double getLowerLimit() {
@@ -50,5 +55,9 @@ public class PriceHitAlarm extends Alarm {
 		if(upperLimit <= lowerLimit)
 			throw new UpperLimitSmallerOrEqualLowerLimitException();
 		this.upperLimit = upperLimit;
+	}
+
+	public boolean wasUpperLimitHit() {
+		return wasUpperLimitHit;
 	}
 }

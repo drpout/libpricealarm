@@ -25,6 +25,7 @@
 		<libdynticker.version>0.4.0</libdynticker.version>
 		<release.description>
 			\+ Added price direction to Alarm.
+			\+ Added wasUpperLimitHit to PriceHitAlarm.
 		</release.description>
 	</properties>
 
