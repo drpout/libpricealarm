@@ -29,7 +29,7 @@ public class PriceHitAlarmTest {
 	public void setUp() throws Exception {
 		notify = mock(Notify.class);
 		exchange = mock(Exchange.class);
-		pair = mock(Pair.class);
+		pair = new Pair("XXX", "YYY");
 		Timer timer = new Timer();
 		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 1000, notify, 0.0043, 0.0042);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
@@ -70,8 +70,6 @@ public class PriceHitAlarmTest {
 
 	@Test
 	public void testToString() {
-		when(pair.getCoin()).thenReturn("XXX");
-		when(pair.getExchange()).thenReturn("YYY");
 		when(exchange.getName()).thenReturn("DummyExchange");
 		Assert.assertEquals("PriceHitAlarm XXX YYY DummyExchange", testAlarm.toString());
 	}

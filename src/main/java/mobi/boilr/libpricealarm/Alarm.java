@@ -12,21 +12,24 @@ public abstract class Alarm implements Serializable {
 	private static final long serialVersionUID = 438506410563236110L;
 
 	private int id;
-	private boolean on;
+	private boolean on = true;
 	private long period;
 	private transient Exchange exchange;
 	private String exchangeCode;
 	private Pair pair;
-	protected double lastValue;
+	protected double lastValue = Double.NaN;
 	private Timestamp lastUpdateTimestamp;
 	protected Notify notify;
+	public enum Direction {
+		UP, DOWN, SAME
+	};
+	private Direction direction = Direction.SAME;
 
 	public Alarm(int id, Exchange exchange, Pair pair, long period, Notify notify) {
 		this.id = id;
 		this.exchange = exchange;
 		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
-		on = true;
 		this.period = period;
 		this.notify = notify;
 	}
@@ -48,6 +51,13 @@ public abstract class Alarm implements Serializable {
 	public double getExchangeLastValue() throws NumberFormatException, IOException {
 		double lastValue = this.lastValue;
 		lastValue = exchange.getLastValue(pair);
+		if(lastValue > this.lastValue) {
+			direction = Direction.UP;
+		} else if(lastValue < this.lastValue) {
+			direction = Direction.DOWN;
+		} else {
+			direction = Direction.SAME;
+		}
 		if(lastUpdateTimestamp == null) {
 			lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 		} else {
@@ -123,6 +133,10 @@ public abstract class Alarm implements Serializable {
 
 	public Timestamp getLastUpdateTimestamp() {
 		return lastUpdateTimestamp;
+	}
+
+	public Direction getDirection() {
+		return direction;
 	}
 
 	@Override

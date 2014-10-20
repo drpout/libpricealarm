@@ -6,7 +6,7 @@
 	<groupId>mobi.boilr.libpricealarm</groupId>
 	<artifactId>libpricealarm</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
 	<inceptionYear>2014</inceptionYear>
@@ -22,7 +22,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jdk.version>1.6</jdk.version>
-		<libdynticker.version>0.2.0</libdynticker.version>
+		<libdynticker.version>0.4.0</libdynticker.version>
+		<release.description>
+			\+ Added price direction to Alarm.
+		</release.description>
 	</properties>
 
 	<developers>
@@ -213,6 +216,7 @@
 					<releaseName>${project.version}</releaseName>
 					<tag>${project.version}</tag>
 					<prerelease>true</prerelease>
+					<description>${release.description}</description>
 				</configuration>
 				<executions>
 					<execution>

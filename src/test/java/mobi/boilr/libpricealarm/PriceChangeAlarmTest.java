@@ -30,7 +30,7 @@ public class PriceChangeAlarmTest {
 	public void setUp() throws Exception {
 		notify = mock(Notify.class);
 		exchange = mock(Exchange.class);
-		pair = mock(Pair.class);
+		pair = new Pair("XXX", "YYY");
 		timer = new Timer();
 	}
 
@@ -110,8 +110,6 @@ public class PriceChangeAlarmTest {
 
 	@Test
 	public void testToString() throws IOException {
-		when(pair.getCoin()).thenReturn("XXX");
-		when(pair.getExchange()).thenReturn("YYY");
 		when(exchange.getName()).thenReturn("DummyExchange");
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
 		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notify, 50f);
