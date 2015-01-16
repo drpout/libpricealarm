@@ -8,10 +8,10 @@ import mobi.boilr.libdynticker.core.Pair;
 public class PriceChangeAlarm extends Alarm {
 
 	private static final long serialVersionUID = -5424769817492896869L;
-	private double change;
-	private float percent;
-	private double lastChange = 0;
-	private long elapsedMilis = 0;
+	protected double change;
+	protected float percent;
+	protected double lastChange = 0;
+	protected long elapsedMilis = 0;
 
 	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long period, Notify notify,
 			double change) throws NumberFormatException, IOException {

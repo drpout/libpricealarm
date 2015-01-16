@@ -1,7 +1,7 @@
 package mobi.boilr.libpricealarm;
 
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +31,7 @@ public class PriceHitUpperLimitAlarmTest {
 		exchange = mock(Exchange.class);
 		pair = new Pair("XXX", "YYY");
 		Timer timer = new Timer();
-		testAlarm = new PriceHitUpperLimitAlarm(alarmID, exchange, pair, 1000, notify, 0.0043);
+		testAlarm = new PriceHitUpperLimitAlarm(alarmID, exchange, pair, 500, notify, 0.0043);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 	}
 
@@ -44,21 +44,21 @@ public class PriceHitUpperLimitAlarmTest {
 	public void testUpperLimitNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, timeout(1500).times(1)).trigger(alarmID);
+		verify(notify, after(750).times(1)).trigger(alarmID);
 	}
 
 	@Test
 	public void testUpperLimitAndReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, timeout(2500).times(2)).trigger(alarmID);
+		verify(notify, after(1250).times(2)).trigger(alarmID);
 	}
 
 	@Test
 	public void testNoLimitHit() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.0042523);
-		verify(notify, timeout(1500).never()).trigger(alarmID);
+		verify(notify, after(750).never()).trigger(alarmID);
 	}
 
 	@Test

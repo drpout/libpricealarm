@@ -6,7 +6,7 @@
 	<groupId>mobi.boilr.libpricealarm</groupId>
 	<artifactId>libpricealarm</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
 	<inceptionYear>2014</inceptionYear>
@@ -24,8 +24,9 @@
 		<jdk.version>1.6</jdk.version>
 		<libdynticker.version>0.4.0</libdynticker.version>
 		<release.description>
-			\+ Added price direction to Alarm.
-			\+ Added wasUpperLimitHit to PriceHitAlarm.
+			\+ Added PriceSpikeAlarm.
+			\+ Tests with timing now fully working.  
+			\+ Refactored SerializationTest to remove repeated code.
 		</release.description>
 	</properties>
 
@@ -75,13 +76,13 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.9.5</version>
+			<version>1.10.19</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -134,7 +135,7 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
+			<!--<plugin>
 				<groupId>org.kuali.maven.plugins</groupId>
 				<artifactId>wagon-maven-plugin</artifactId>
 				<version>1.0.5</version>
@@ -186,7 +187,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

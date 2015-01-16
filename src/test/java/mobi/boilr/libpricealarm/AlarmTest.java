@@ -27,7 +27,7 @@ public class AlarmTest {
 		notify = mock(Notify.class);
 		exchange = mock(Exchange.class);
 		Timer timer = new Timer();
-		testAlarm = new PriceHitAlarm(alarmID, exchange, null, 1000, notify, 20.0, 10.0);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, null, 500, notify, 20.0, 10.0);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 	}
 
@@ -40,15 +40,15 @@ public class AlarmTest {
 	public void testDirection() throws IOException, InterruptedException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(null)).thenReturn(15.0);
-		Thread.sleep(1500);
+		Thread.sleep(750);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.SAME);
 		when(exchange.getLastValue(null)).thenReturn(16.0);
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.UP);
 		when(exchange.getLastValue(null)).thenReturn(15.0);
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.DOWN);
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.SAME);
 	}
 
