@@ -135,7 +135,7 @@
 				</configuration>
 			</plugin>
 
-			<!--<plugin>
+			<plugin>
 				<groupId>org.kuali.maven.plugins</groupId>
 				<artifactId>wagon-maven-plugin</artifactId>
 				<version>1.0.5</version>
@@ -187,7 +187,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>-->
+			</plugin>
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
