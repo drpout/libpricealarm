@@ -25,8 +25,8 @@
 		<libdynticker.version>0.4.0</libdynticker.version>
 		<release.description>
 			\+ Added PriceSpikeAlarm.
-			\+ Tests with timing now fully working.  
-			\+ Refactored SerializationTest to remove repeated code.
+			\* Tests with timing now fully working.  
+			\* Refactored SerializationTest to remove repeated code.
 		</release.description>
 	</properties>
 
