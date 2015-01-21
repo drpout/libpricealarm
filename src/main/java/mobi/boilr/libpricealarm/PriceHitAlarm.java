@@ -26,7 +26,9 @@ public class PriceHitAlarm extends Alarm {
 
 	@Override
 	public boolean run() throws NumberFormatException, IOException {
-		lastValue = getExchangeLastValue();
+		double newValue = getExchangeLastValue();
+		computeDirection(newValue);
+		lastValue = newValue;
 		if(lastValue <= lowerLimit) {
 			wasUpperLimitHit = false;
 		} else if(lastValue >= upperLimit) {

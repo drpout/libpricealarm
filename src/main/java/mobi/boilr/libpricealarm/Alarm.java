@@ -49,21 +49,28 @@ public abstract class Alarm implements Serializable {
 	}
 
 	public double getExchangeLastValue() throws NumberFormatException, IOException {
-		double lastValue = this.lastValue;
-		lastValue = exchange.getLastValue(pair);
-		if(lastValue > this.lastValue) {
-			direction = Direction.UP;
-		} else if(lastValue < this.lastValue) {
-			direction = Direction.DOWN;
-		} else {
-			direction = Direction.SAME;
-		}
+		double newValue = this.lastValue;
+		newValue = exchange.getLastValue(pair);
 		if(lastUpdateTimestamp == null) {
 			lastUpdateTimestamp = new Timestamp(System.currentTimeMillis());
 		} else {
 			lastUpdateTimestamp.setTime(System.currentTimeMillis());
 		}
-		return lastValue;
+		return newValue;
+	}
+
+	/**
+	 * Checks whether price has gone up, down or stayed the same.
+	 * @param newValue The last price fetched from the exchange.
+	 */
+	protected void computeDirection(double newValue) {
+		if(newValue > lastValue) {
+			direction = Direction.UP;
+		} else if(newValue < lastValue) {
+			direction = Direction.DOWN;
+		} else {
+			direction = Direction.SAME;
+		}
 	}
 
 	public double getLastValue() {
