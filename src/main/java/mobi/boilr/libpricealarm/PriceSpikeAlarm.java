@@ -52,7 +52,7 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 	}
 
 	private static final long serialVersionUID = 3011908896235313698L;
-	private long timeFrame, overTimeFrame, underTimeFrame;
+	private long timeFrame;
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
 	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, double change, long timeFrame)
@@ -69,8 +69,6 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 
 	private void constructorAux(long timeFrame) {
 		this.timeFrame = timeFrame;
-		overTimeFrame = timeFrame + getPeriod();
-		underTimeFrame = timeFrame - (getPeriod() / 2);
 		lastValueBuffer.add(new TimestampedLastValue(getLastValue(), getLastUpdateTimestamp().getTime()));
 	}
 
@@ -90,7 +88,7 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		while(!lastValueBuffer.isEmpty()) {
 			tmlv = lastValueBuffer.get(0);
 			elapsedMilis = newValueTimestamp - tmlv.getTimestamp();
-			if(elapsedMilis < overTimeFrame) {
+			if(elapsedMilis < timeFrame + getPeriod()) { // overTimeFrame
 				break;
 			} else {
 				lastValueBuffer.remove(0);
@@ -119,7 +117,7 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		 * frame we keep filling it. Otherwise we remove the head element (the
 		 * oldest one) and add the new value at the tail.
 		 */
-		if(elapsedMilis < underTimeFrame) { // fill buffer
+		if(elapsedMilis < timeFrame - (getPeriod() / 2)) { // underTimeFrame, fill buffer
 			lastValueBuffer.add(new TimestampedLastValue(newValue, newValueTimestamp));
 		} else {
 			lastValueBuffer.remove(tmlv);
