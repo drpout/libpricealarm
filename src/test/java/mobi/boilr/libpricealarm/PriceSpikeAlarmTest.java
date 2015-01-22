@@ -79,7 +79,7 @@ public class PriceSpikeAlarmTest {
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notify, after(750).never()).trigger(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
-		when(exchange.getLastValue(pair)).thenThrow(new IOException("No net simultion"));
+		when(exchange.getLastValue(pair)).thenThrow(new IOException("No net simulation"));
 		verify(notify, after(2500).never()).trigger(alarmID);
 		Mockito.reset(exchange);
 		when(exchange.getLastValue(pair)).thenReturn(0.003);
