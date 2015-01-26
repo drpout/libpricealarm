@@ -64,21 +64,21 @@ public class PriceHitAlarmTest {
 	public void testUpperLimitNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, after(750).times(1)).trigger(alarmID);
+		verify(notify, after(250).times(1)).trigger(alarmID);
 	}
 
 	@Test
 	public void testUpperLimitAndReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, after(1250).times(2)).trigger(alarmID);
+		verify(notify, after(1250).times(3)).trigger(alarmID);
 	}
 
 	@Test
 	public void testLowerLimitNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004123);
-		verify(notify, after(750).times(1)).trigger(alarmID);
+		verify(notify, after(250).times(1)).trigger(alarmID);
 	}
 
 	@Test

@@ -61,9 +61,10 @@ public class PriceSpikeAlarmTest {
 	public void testSpikeChange() throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
 		testAlarm = new PriceSpikeAlarm(alarmID, exchange, pair, 500, notify, 0.002d, 2000);
-		when(exchange.getLastValue(pair)).thenReturn(0.005);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		verify(notify, after(750).never()).trigger(alarmID);
+		verify(notify, after(250).never()).trigger(alarmID);
+		when(exchange.getLastValue(pair)).thenReturn(0.005);
+		verify(notify, after(500).never()).trigger(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notify, after(500).times(1)).trigger(alarmID);
@@ -92,9 +93,10 @@ public class PriceSpikeAlarmTest {
 	public void testSpikeChangeNoNet() throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
 		when(exchange.getLastValue(pair)).thenReturn(0.001);
 		testAlarm = new PriceSpikeAlarm(alarmID, exchange, pair, 500, notify, 0.002d, 2000);
-		when(exchange.getLastValue(pair)).thenReturn(0.002);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		verify(notify, after(750).never()).trigger(alarmID);
+		verify(notify, after(250).never()).trigger(alarmID);
+		when(exchange.getLastValue(pair)).thenReturn(0.002);
+		verify(notify, after(500).never()).trigger(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenThrow(new IOException("No net simulation"));
 		verify(notify, after(2500).never()).trigger(alarmID);
@@ -110,9 +112,10 @@ public class PriceSpikeAlarmTest {
 	public void testSpikePercent() throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
 		testAlarm = new PriceSpikeAlarm(alarmID, exchange, pair, 500, notify, 50f, 2000);
-		when(exchange.getLastValue(pair)).thenReturn(0.005);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		verify(notify, after(750).never()).trigger(alarmID);
+		verify(notify, after(250).never()).trigger(alarmID);
+		when(exchange.getLastValue(pair)).thenReturn(0.005);
+		verify(notify, after(500).never()).trigger(alarmID);
 		Assert.assertEquals(25, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notify, after(500).times(1)).trigger(alarmID);

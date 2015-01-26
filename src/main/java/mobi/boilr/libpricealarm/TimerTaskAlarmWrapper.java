@@ -14,7 +14,7 @@ public class TimerTaskAlarmWrapper extends TimerTask implements Serializable {
 	public TimerTaskAlarmWrapper(Alarm alarm, Timer timer) {
 		this.alarm = alarm;
 		this.timer = timer;
-		timer.schedule(this, alarm.getPeriod(), alarm.getPeriod());
+		timer.schedule(this, 0, alarm.getPeriod());
 	}
 
 	@Override

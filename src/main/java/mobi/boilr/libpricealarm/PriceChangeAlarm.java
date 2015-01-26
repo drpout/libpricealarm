@@ -20,36 +20,38 @@ public class PriceChangeAlarm extends Alarm {
 	protected double lastChange = 0;
 	protected long elapsedMilis = 0;
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify,
-			double change) throws NumberFormatException, IOException {
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify, double change) {
 		super(id, exchange, pair, timeFrame, notify);
 		this.change = change;
 		percent = 0;
-		lastValue = getExchangeLastValue();
 	}
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify,
-			float percent) throws NumberFormatException, IOException {
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify, float percent) {
 		super(id, exchange, pair, timeFrame, notify);
 		this.percent = percent;
-		lastValue = getExchangeLastValue();
-		change = lastValue * (percent * 0.01);
 	}
 
 	@Override
 	public boolean run() throws NumberFormatException, IOException {
 		boolean ret = true;
-		long prevMilis = getLastUpdateTimestamp().getTime();
-		double newValue = getExchangeLastValue();
-		computeDirection(newValue);
-		elapsedMilis = getLastUpdateTimestamp().getTime() - prevMilis;
-		lastChange = Math.abs(lastValue - newValue);
-		if(lastChange >= change) {
-			ret = notify.trigger(getId());
+		double newValue;
+		if(Double.isNaN(lastValue)) { // Initialize.
+			newValue = getExchangeLastValue();
+		} else {
+			long prevMilis = getLastUpdateTimestamp().getTime();
+			newValue = getExchangeLastValue();
+			computeDirection(newValue);
+			elapsedMilis = getLastUpdateTimestamp().getTime() - prevMilis;
+			lastChange = Math.abs(lastValue - newValue);
+			if(lastChange >= change) {
+				ret = notify.trigger(getId());
+			}
+			if(percent > 0) {
+				lastChange = (lastChange / lastValue) * 100;
+			}
 		}
 		if(percent > 0) {
 			change = newValue * (percent * 0.01);
-			lastChange = (lastChange / lastValue) * 100;
 		}
 		lastValue = newValue;
 		return ret;

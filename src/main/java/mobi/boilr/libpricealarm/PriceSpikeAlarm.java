@@ -56,22 +56,15 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
 	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, double change, long timeFrame)
-			throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
+			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, change);
-		constructorAux(timeFrame);
+		setTimeFrame(timeFrame);
 	}
 
 	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, float percent, long timeFrame)
-			throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
+			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, percent);
-		constructorAux(timeFrame);
-	}
-
-	private void constructorAux(long timeFrame) throws TimeFrameSmallerOrEqualUpdateIntervalException {
-		if(timeFrame <= getPeriod())
-			throw new TimeFrameSmallerOrEqualUpdateIntervalException();
-		this.timeFrame = timeFrame;
-		lastValueBuffer.add(new TimestampedLastValue(getLastValue(), getLastUpdateTimestamp().getTime()));
+		setTimeFrame(timeFrame);
 	}
 
 	@Override
@@ -79,53 +72,58 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		boolean ret = true;
 		double newValue = getExchangeLastValue();
 		long newValueTimestamp = getLastUpdateTimestamp().getTime();
-
-		TimestampedLastValue tmlv = lastValueBuffer.get(0);
-		/*
-		 * In the event the alarm could not update during a period longer than
-		 * one update interval, we remove the outdated values from the buffer
-		 * and do the change comparison with the most up-to-date value
-		 * available.
-		 */
-		while(!lastValueBuffer.isEmpty()) {
-			tmlv = lastValueBuffer.get(0);
-			elapsedMilis = newValueTimestamp - tmlv.getTimestamp();
-			if(elapsedMilis < timeFrame + getPeriod()) { // overTimeFrame
-				break;
-			} else {
-				lastValueBuffer.remove(0);
-			}
-		}
-
-		lastValue = tmlv.getLastValue();
-		computeDirection(newValue);
-
-		/*
-		 * Compute change and check if we should trigger.
-		 */
-		lastChange = Math.abs(lastValue - newValue);
-		if(percent > 0) {
-			change = lastValue * (percent * 0.01);
-		}
-		if(lastChange >= change) {
-			ret = notify.trigger(getId());
-		}
-		if(percent > 0) {
-			lastChange = (lastChange / lastValue) * 100;
-		}
-
-		/*
-		 * If the buffer does not contain enough elements to represent one time
-		 * frame we keep filling it. Otherwise we remove the head element (the
-		 * oldest one) and add the new value at the tail.
-		 */
-		if(elapsedMilis < timeFrame - (getPeriod() / 2)) { // underTimeFrame, fill buffer
+		if(Double.isNaN(lastValue)) { // Initialize.
 			lastValueBuffer.add(new TimestampedLastValue(newValue, newValueTimestamp));
+			lastValue = newValue;
 		} else {
-			lastValueBuffer.remove(tmlv);
-			tmlv.setLastValue(newValue);
-			tmlv.setTimestamp(newValueTimestamp);
-			lastValueBuffer.add(tmlv);
+			TimestampedLastValue tmlv = lastValueBuffer.get(0);
+			/*
+			 * In the event the alarm could not update during a period longer
+			 * than one update interval, we remove the outdated values from the
+			 * buffer and do the change comparison with the most up-to-date
+			 * value available.
+			 */
+			while(!lastValueBuffer.isEmpty()) {
+				tmlv = lastValueBuffer.get(0);
+				elapsedMilis = newValueTimestamp - tmlv.getTimestamp();
+				if(elapsedMilis < timeFrame + getPeriod()) { // overTimeFrame
+					break;
+				} else {
+					lastValueBuffer.remove(0);
+				}
+			}
+
+			lastValue = tmlv.getLastValue();
+			computeDirection(newValue);
+
+			/*
+			 * Compute change and check if we should trigger.
+			 */
+			lastChange = Math.abs(lastValue - newValue);
+			if(percent > 0) {
+				change = lastValue * (percent * 0.01);
+			}
+			if(lastChange >= change) {
+				ret = notify.trigger(getId());
+			}
+			if(percent > 0) {
+				lastChange = (lastChange / lastValue) * 100;
+			}
+
+			/*
+			 * If the buffer does not contain enough elements to represent one
+			 * time frame we keep filling it. Otherwise we remove the head
+			 * element (the oldest one) and add the new value at the tail.
+			 */
+			if(elapsedMilis < timeFrame - (getPeriod() / 2)) {
+				// underTimeFrame, fill buffer
+				lastValueBuffer.add(new TimestampedLastValue(newValue, newValueTimestamp));
+			} else {
+				lastValueBuffer.remove(tmlv);
+				tmlv.setLastValue(newValue);
+				tmlv.setTimestamp(newValueTimestamp);
+				lastValueBuffer.add(tmlv);
+			}
 		}
 
 		return ret;
