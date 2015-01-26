@@ -93,7 +93,7 @@ public abstract class Alarm implements Serializable {
 		return on;
 	}
 
-	public void setPeriod(long period) {
+	public void setPeriod(long period) throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		this.period = period;
 	}
 

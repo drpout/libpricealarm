@@ -29,7 +29,7 @@ public class TimerTaskAlarmWrapper extends TimerTask implements Serializable {
 		}
 	}
 
-	public void setPeriod(long period) {
+	public void setPeriod(long period) throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		alarm.setPeriod(period);
 		cancel();
 		timer.schedule(this, period, period);

@@ -40,6 +40,26 @@ public class PriceHitAlarmTest {
 		wrapper.turnOff();
 	}
 
+	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
+	public void testCreateEqualLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notify, 0.0043, 0.0043);
+	}
+
+	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
+	public void testCreateInvertedLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notify, 0.0042, 0.0043);
+	}
+
+	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
+	public void testSetEqualLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
+		testAlarm.setLowerLimit(0.0043);
+	}
+
+	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
+	public void testSetInvertedLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
+		testAlarm.setUpperLimit(0.0041);
+	}
+
 	@Test
 	public void testUpperLimitNoReset() throws IOException {
 		when(notify.trigger(alarmID)).thenReturn(false);

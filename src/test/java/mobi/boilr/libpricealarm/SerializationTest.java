@@ -114,7 +114,8 @@ public class SerializationTest {
 	}
 
 	@Test
-	public void testPriceSpikeAlarmSerialization() throws IOException, ClassNotFoundException {
+	public void testPriceSpikeAlarmSerialization() throws IOException, ClassNotFoundException, NumberFormatException,
+			TimeFrameSmallerOrEqualUpdateIntervalException {
 		testAlarm = new PriceSpikeAlarm(1, exchange, pair, 1000, notify, 50, 600000);
 		serializeAndDeserialize();
 		checkPriceChangeAlarmIntegrity();

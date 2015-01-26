@@ -56,18 +56,20 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
 	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, double change, long timeFrame)
-			throws NumberFormatException, IOException {
+			throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, change);
 		constructorAux(timeFrame);
 	}
 
 	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, float percent, long timeFrame)
-			throws NumberFormatException, IOException {
+			throws NumberFormatException, IOException, TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, percent);
 		constructorAux(timeFrame);
 	}
 
-	private void constructorAux(long timeFrame) {
+	private void constructorAux(long timeFrame) throws TimeFrameSmallerOrEqualUpdateIntervalException {
+		if(timeFrame <= getPeriod())
+			throw new TimeFrameSmallerOrEqualUpdateIntervalException();
 		this.timeFrame = timeFrame;
 		lastValueBuffer.add(new TimestampedLastValue(getLastValue(), getLastUpdateTimestamp().getTime()));
 	}
@@ -133,8 +135,16 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		return timeFrame;
 	}
 
-	public void setTimeFrame(long timeFrame) {
+	public void setTimeFrame(long timeFrame) throws TimeFrameSmallerOrEqualUpdateIntervalException {
+		if(timeFrame <= getPeriod())
+			throw new TimeFrameSmallerOrEqualUpdateIntervalException();
 		this.timeFrame = timeFrame;
 	}
 
+	@Override
+	public void setPeriod(long period) throws TimeFrameSmallerOrEqualUpdateIntervalException {
+		if(timeFrame <= period)
+			throw new TimeFrameSmallerOrEqualUpdateIntervalException();
+		super.setPeriod(period);
+	}
 }
