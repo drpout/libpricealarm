@@ -11,43 +11,38 @@ import java.util.Timer;
 import mobi.boilr.libdynticker.core.Exchange;
 import mobi.boilr.libdynticker.core.Pair;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class PriceHitAlarmTest {
 
 	private PriceHitAlarm testAlarm;
 	private TimerTaskAlarmWrapper wrapper;
-	private Notify notify;
+	private Notifier notifier;
 	private Exchange exchange;
 	private Pair pair;
+	private Timer timer;
 	private static final int alarmID = 1;
 
 	@Before
 	public void setUp() throws Exception {
-		notify = mock(Notify.class);
+		notifier = mock(Notifier.class, Mockito.CALLS_REAL_METHODS);
 		exchange = mock(Exchange.class);
 		pair = new Pair("XXX", "YYY");
-		Timer timer = new Timer();
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notify, 0.0043, 0.0042);
-		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		wrapper.turnOff();
+		timer = new Timer();
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0043, 0.0042);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
 	public void testCreateEqualLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notify, 0.0043, 0.0043);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0043, 0.0043);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
 	public void testCreateInvertedLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notify, 0.0042, 0.0043);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0042, 0.0043);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
@@ -62,30 +57,42 @@ public class PriceHitAlarmTest {
 
 	@Test
 	public void testUpperLimitNoReset() throws IOException {
-		when(notify.trigger(alarmID)).thenReturn(false);
+		when(notifier.notify(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, after(250).times(1)).trigger(alarmID);
+		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
+		verify(notifier, after(750).times(1)).notify(alarmID);
+		Assert.assertEquals(0.00445625, testAlarm.getLastValue(), 0);
+		wrapper.turnOff();
 	}
 
 	@Test
 	public void testUpperLimitAndReset() throws IOException {
-		when(notify.trigger(alarmID)).thenReturn(true);
+		when(notifier.notify(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
-		verify(notify, after(1250).times(3)).trigger(alarmID);
+		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
+		verify(notifier, after(1250).times(3)).notify(alarmID);
+		Assert.assertEquals(0.00445625, testAlarm.getLastValue(), 0);
+		wrapper.turnOff();
 	}
 
 	@Test
 	public void testLowerLimitNoReset() throws IOException {
-		when(notify.trigger(alarmID)).thenReturn(false);
+		when(notifier.notify(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004123);
-		verify(notify, after(250).times(1)).trigger(alarmID);
+		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
+		verify(notifier, after(750).times(1)).notify(alarmID);
+		Assert.assertEquals(0.004123, testAlarm.getLastValue(), 0);
+		wrapper.turnOff();
 	}
 
 	@Test
 	public void testNoLimitHit() throws IOException {
-		when(notify.trigger(alarmID)).thenReturn(false);
+		when(notifier.notify(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.0042523);
-		verify(notify, after(750).never()).trigger(alarmID);
+		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
+		verify(notifier, after(750).never()).notify(alarmID);
+		Assert.assertEquals(0.0042523, testAlarm.getLastValue(), 0);
+		wrapper.turnOff();
 	}
 
 	@Test

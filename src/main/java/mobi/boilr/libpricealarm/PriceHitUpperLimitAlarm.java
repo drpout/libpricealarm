@@ -8,8 +8,8 @@ public class PriceHitUpperLimitAlarm extends PriceHitAlarm {
 	private static final long serialVersionUID = -7107219115788419337L;
 
 	public PriceHitUpperLimitAlarm(int id, Exchange exchange, Pair pair, long period,
-			Notify notify, double upperLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
-		super(id, exchange, pair, period, notify, upperLimit, Double.NEGATIVE_INFINITY);
+			Notifier notifier, double upperLimit) throws UpperLimitSmallerOrEqualLowerLimitException {
+		super(id, exchange, pair, period, notifier, upperLimit, Double.NEGATIVE_INFINITY);
 	}
 
 }

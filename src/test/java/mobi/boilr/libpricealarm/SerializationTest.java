@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class SerializationTest {
 
-	private Notify notify;
+	private Notifier notify;
 	private Alarm testAlarm;
 	private Alarm newAlarm;
 	private Exchange exchange;
@@ -28,7 +28,7 @@ public class SerializationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		notify = mock(Notify.class);
+		notify = mock(Notifier.class);
 		exchange = mock(Exchange.class);
 		when(exchange.getLastValue(pair)).thenReturn(200.0);
 	}
@@ -59,7 +59,7 @@ public class SerializationTest {
 		Assert.assertEquals(testAlarm.getPair(), newAlarm.getPair());
 		Assert.assertEquals(testAlarm.getPeriod(), newAlarm.getPeriod());
 		Assert.assertEquals(testAlarm.getExchangeCode(), newAlarm.getExchangeCode());
-		Assert.assertNotNull(testAlarm.getNotify());
+		Assert.assertNotNull(testAlarm.getNotifier());
 		Assert.assertNull(newAlarm.getExchange());
 	}
 

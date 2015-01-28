@@ -27,8 +27,11 @@
 			\+ Added PriceSpikeAlarm.
 			\+ Added price direction to Alarm.
 			\+ Added wasUpperLimitHit to PriceHitAlarm.
+			\+ Added get[Upper/Lower]Limit to all alarms.
+			\* Notifier class now checks if alarm is on before showing notification.
 			\* Tests with timing now fully working.
 			\* Refactored SerializationTest to remove repeated code.
+			\- Removed PriceHit[Upper/Lower]AlarmTest, duplicates of PriceHitAlarmTest.
 		</release.description>
 	</properties>
 

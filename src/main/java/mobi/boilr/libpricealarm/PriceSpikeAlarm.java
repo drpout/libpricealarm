@@ -11,11 +11,11 @@ import mobi.boilr.libdynticker.core.Pair;
 /**
  * A PriceSpikeAlarm is a PriceChangeAlarm with a rolling time frame. Besides
  * the time frame it also takes into account an update interval. The update
- * interval denotes how often price is fetched. The time frame defines which
- * price to compare to. When a new price is fetched it marks the end of a time
- * frame and is compared to the value previously fetched at the beginning of
- * such time frame. To do this we need to store values in a buffer for later
- * comparison.
+ * interval denotes how often price is fetched. The time frame defines the base
+ * price, i.e. which price to compare to. When a new price is fetched it marks
+ * the end of a time frame and is compared to the value previously fetched at
+ * the beginning of such time frame. To do this we need to store values in a
+ * buffer for later comparison.
  * 
  * With this approach, a PriceSpikeAlarm is triggered when price drops/rises
  * quickly all of a sudden.
@@ -53,15 +53,16 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 
 	private static final long serialVersionUID = 3011908896235313698L;
 	private long timeFrame;
+	private double baseValue = Double.NaN;
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
-	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, double change, long timeFrame)
+	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, double change, long timeFrame)
 			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, change);
 		setTimeFrame(timeFrame);
 	}
 
-	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notify notify, float percent, long timeFrame)
+	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, float percent, long timeFrame)
 			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, percent);
 		setTimeFrame(timeFrame);
@@ -74,8 +75,16 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		long newValueTimestamp = getLastUpdateTimestamp().getTime();
 		if(Double.isNaN(lastValue)) { // Initialize.
 			lastValueBuffer.add(new TimestampedLastValue(newValue, newValueTimestamp));
-			lastValue = newValue;
+			// Define the base value.
+			baseValue = newValue;
+			// Compute change.
+			if(isPercent()) {
+				calcChangeFromPercent(baseValue);
+			}
 		} else {
+			/*
+			 * Get the base value for comparison.
+			 */
 			TimestampedLastValue tmlv = lastValueBuffer.get(0);
 			/*
 			 * In the event the alarm could not update during a period longer
@@ -93,21 +102,21 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 				}
 			}
 
-			lastValue = tmlv.getLastValue();
-			computeDirection(newValue);
+			baseValue = tmlv.getLastValue();
+			computeDirection(baseValue, newValue);
 
 			/*
 			 * Compute change and check if we should trigger.
 			 */
-			lastChange = Math.abs(lastValue - newValue);
-			if(percent > 0) {
-				change = lastValue * (percent * 0.01);
+			lastChange = Math.abs(baseValue - newValue);
+			if(isPercent()) {
+				calcChangeFromPercent(baseValue);
 			}
 			if(lastChange >= change) {
-				ret = notify.trigger(getId());
+				ret = notifier.trigger(this);
 			}
-			if(percent > 0) {
-				lastChange = (lastChange / lastValue) * 100;
+			if(isPercent()) {
+				calcLastChangeInPercent(baseValue);
 			}
 
 			/*
@@ -125,7 +134,7 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 				lastValueBuffer.add(tmlv);
 			}
 		}
-
+		lastValue = newValue;
 		return ret;
 	}
 
@@ -144,5 +153,19 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 		if(timeFrame <= period)
 			throw new TimeFrameSmallerOrEqualUpdateIntervalException();
 		super.setPeriod(period);
+	}
+
+	public double getBaseValue() {
+		return baseValue;
+	}
+
+	@Override
+	public double getLowerLimit() {
+		return baseValue - change;
+	}
+
+	@Override
+	public double getUpperLimit() {
+		return baseValue + change;
 	}
 }

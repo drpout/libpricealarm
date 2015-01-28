@@ -19,19 +19,19 @@ public abstract class Alarm implements Serializable {
 	private Pair pair;
 	protected double lastValue = Double.NaN;
 	private Timestamp lastUpdateTimestamp;
-	protected Notify notify;
+	protected Notifier notifier;
 	public enum Direction {
 		UP, DOWN, SAME
 	};
 	private Direction direction = Direction.SAME;
 
-	public Alarm(int id, Exchange exchange, Pair pair, long period, Notify notify) {
+	public Alarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier) {
 		this.id = id;
 		this.exchange = exchange;
 		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
 		this.period = period;
-		this.notify = notify;
+		this.notifier = notifier;
 	}
 
 	/**
@@ -61,12 +61,13 @@ public abstract class Alarm implements Serializable {
 
 	/**
 	 * Checks whether price has gone up, down or stayed the same.
+	 * @param baseValue The value to compare to.
 	 * @param newValue The last price fetched from the exchange.
 	 */
-	protected void computeDirection(double newValue) {
-		if(newValue > lastValue) {
+	protected void computeDirection(double baseValue, double newValue) {
+		if(newValue > baseValue) {
 			direction = Direction.UP;
-		} else if(newValue < lastValue) {
+		} else if(newValue < baseValue) {
 			direction = Direction.DOWN;
 		} else {
 			direction = Direction.SAME;
@@ -75,10 +76,6 @@ public abstract class Alarm implements Serializable {
 
 	public double getLastValue() {
 		return lastValue;
-	}
-
-	public void setLastValue(double lastValue) {
-		this.lastValue = lastValue;
 	}
 
 	public Pair getPair() {
@@ -113,20 +110,16 @@ public abstract class Alarm implements Serializable {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getExchangeCode() {
 		return exchangeCode;
 	}
 
-	public Notify getNotify() {
-		return notify;
+	public Notifier getNotifier() {
+		return notifier;
 	}
 
-	public void setNotify(Notify notify) {
-		this.notify = notify;
+	public void setNotifier(Notifier notifier) {
+		this.notifier = notifier;
 	}
 
 	public void setExchange(Exchange exchange) {
@@ -151,4 +144,8 @@ public abstract class Alarm implements Serializable {
 		return getClass().getSimpleName() + " " + pair.getCoin() +
 				" " + pair.getExchange() + " " + exchange.getName();
 	}
+
+	public abstract double getLowerLimit();
+
+	public abstract double getUpperLimit();
 }

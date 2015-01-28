@@ -7,7 +7,7 @@ import java.util.TimerTask;
 
 public class TimerTaskAlarmWrapper extends TimerTask implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8662201066187055553L;
 	private Alarm alarm;
 	private transient Timer timer;
 

@@ -15,19 +15,19 @@ import mobi.boilr.libdynticker.core.Pair;
 public class PriceChangeAlarm extends Alarm {
 
 	private static final long serialVersionUID = -5424769817492896869L;
-	protected double change;
+	protected double change = Double.NaN;
 	protected float percent;
 	protected double lastChange = 0;
 	protected long elapsedMilis = 0;
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify, double change) {
-		super(id, exchange, pair, timeFrame, notify);
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, double change) {
+		super(id, exchange, pair, timeFrame, notifier);
 		this.change = change;
 		percent = 0;
 	}
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notify notify, float percent) {
-		super(id, exchange, pair, timeFrame, notify);
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, float percent) {
+		super(id, exchange, pair, timeFrame, notifier);
 		this.percent = percent;
 	}
 
@@ -40,21 +40,29 @@ public class PriceChangeAlarm extends Alarm {
 		} else {
 			long prevMilis = getLastUpdateTimestamp().getTime();
 			newValue = getExchangeLastValue();
-			computeDirection(newValue);
+			computeDirection(lastValue, newValue);
 			elapsedMilis = getLastUpdateTimestamp().getTime() - prevMilis;
 			lastChange = Math.abs(lastValue - newValue);
 			if(lastChange >= change) {
-				ret = notify.trigger(getId());
+				ret = notifier.trigger(this);
 			}
-			if(percent > 0) {
-				lastChange = (lastChange / lastValue) * 100;
+			if(isPercent()) {
+				calcLastChangeInPercent(lastValue);
 			}
 		}
-		if(percent > 0) {
-			change = newValue * (percent * 0.01);
+		if(isPercent()) {
+			calcChangeFromPercent(newValue);
 		}
 		lastValue = newValue;
 		return ret;
+	}
+
+	protected void calcLastChangeInPercent(double baseValue) {
+		lastChange = (lastChange / baseValue) * 100;
+	}
+
+	protected void calcChangeFromPercent(double baseValue) {
+		change = baseValue * (percent * 0.01);
 	}
 
 	public double getChange() {
@@ -72,7 +80,7 @@ public class PriceChangeAlarm extends Alarm {
 
 	public void setPercent(float percent) {
 		this.percent = percent;
-		change = lastValue * (percent * 0.01);
+		calcChangeFromPercent(lastValue);
 	}
 
 	public boolean isPercent() {
@@ -85,5 +93,15 @@ public class PriceChangeAlarm extends Alarm {
 
 	public long getElapsedMilis() {
 		return elapsedMilis;
+	}
+
+	@Override
+	public double getLowerLimit() {
+		return lastValue - change;
+	}
+
+	@Override
+	public double getUpperLimit() {
+		return lastValue + change;
 	}
 }
