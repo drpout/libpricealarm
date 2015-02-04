@@ -20,6 +20,7 @@ public abstract class Alarm implements Serializable {
 	protected double lastValue = Double.NaN;
 	private Timestamp lastUpdateTimestamp;
 	protected Notifier notifier;
+	private int position;
 	public enum Direction {
 		UP, DOWN, SAME
 	};
@@ -148,4 +149,11 @@ public abstract class Alarm implements Serializable {
 	public abstract double getLowerLimit();
 
 	public abstract double getUpperLimit();
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
 }
