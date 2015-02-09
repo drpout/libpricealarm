@@ -22,9 +22,9 @@ public abstract class Alarm implements Serializable {
 	protected Notifier notifier;
 	private int position;
 	public enum Direction {
-		UP, DOWN, SAME
+		UP, DOWN, NONE
 	};
-	private Direction direction = Direction.SAME;
+	private Direction direction = Direction.NONE;
 
 	public Alarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier) {
 		this.id = id;
@@ -61,7 +61,7 @@ public abstract class Alarm implements Serializable {
 	}
 
 	/**
-	 * Checks whether price has gone up, down or stayed the same.
+	 * Checks whether price has gone up or down.
 	 * @param baseValue The value to compare to.
 	 * @param newValue The last price fetched from the exchange.
 	 */
@@ -70,8 +70,6 @@ public abstract class Alarm implements Serializable {
 			direction = Direction.UP;
 		} else if(newValue < baseValue) {
 			direction = Direction.DOWN;
-		} else {
-			direction = Direction.SAME;
 		}
 	}
 

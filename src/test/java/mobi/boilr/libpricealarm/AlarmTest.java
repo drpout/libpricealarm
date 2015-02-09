@@ -47,17 +47,19 @@ public class AlarmTest {
 	@Test
 	public void testDirection() throws IOException, InterruptedException {
 		Thread.sleep(250);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.SAME);
+		Assert.assertEquals(testAlarm.getDirection(), Direction.NONE);
 		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.SAME);
+		Assert.assertEquals(testAlarm.getDirection(), Direction.NONE);
 		when(exchange.getLastValue(pair)).thenReturn(16.0);
+		Thread.sleep(500);
+		Assert.assertEquals(testAlarm.getDirection(), Direction.UP);
 		Thread.sleep(500);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.UP);
 		when(exchange.getLastValue(pair)).thenReturn(15.0);
 		Thread.sleep(500);
 		Assert.assertEquals(testAlarm.getDirection(), Direction.DOWN);
 		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.SAME);
+		Assert.assertEquals(testAlarm.getDirection(), Direction.DOWN);
 	}
 
 	@Test
