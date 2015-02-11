@@ -24,11 +24,12 @@
 		<jdk.version>1.6</jdk.version>
 		<libdynticker.version>0.4.0</libdynticker.version>
 		<release.description>
-			\+ Added PriceSpikeAlarm.
+			\+ Added RollingPriceChangeAlarm.
 			\+ Added price direction to Alarm.
 			\+ Added wasUpperLimitHit to PriceHitAlarm.
 			\+ Added get[Upper/Lower]Limit to all alarms.
 			\+ Added comparator for alarm's position.
+			\* PriceChangeAlarm now clears its buffer when a new pair is set.
 			\* Notifier class now checks if alarm is on before showing notification.
 			\* Tests with timing now fully working.
 			\* Refactored SerializationTest to remove repeated code.
@@ -49,7 +50,7 @@
 
 	<licenses>
 		<license>
-			<name>LGPL v3</name>
+			<name>GNU LGPLv3+</name>
 			<url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
 			<distribution>repo</distribution>
 		</license>

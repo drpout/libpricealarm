@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class SerializationTest {
 
-	private Notifier notify;
+	private Notifier notifier;
 	private Alarm testAlarm;
 	private Alarm newAlarm;
 	private Exchange exchange;
@@ -28,7 +28,7 @@ public class SerializationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		notify = mock(Notifier.class);
+		notifier = mock(Notifier.class);
 		exchange = mock(Exchange.class);
 		when(exchange.getLastValue(pair)).thenReturn(200.0);
 	}
@@ -72,7 +72,7 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceHitAlarmSerialization() throws IOException, ClassNotFoundException, UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitAlarm(1, exchange, pair, 1000, notify, 600, 580);
+		testAlarm = new PriceHitAlarm(1, exchange, pair, 1000, notifier, 600, 580);
 		serializeAndDeserialize();
 		checkAlarmIntegrity();
 		checkPriceHitAlarmIntegrity();
@@ -81,7 +81,7 @@ public class SerializationTest {
 	@Test
 	public void testPriceHitLowerLimitAlarmSerialization() throws IOException,
 			ClassNotFoundException, UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitLowerLimitAlarm(1, exchange, pair, 1000, notify, 0.001);
+		testAlarm = new PriceHitLowerLimitAlarm(1, exchange, pair, 1000, notifier, 0.001);
 		serializeAndDeserialize();
 		checkAlarmIntegrity();
 		checkPriceHitAlarmIntegrity();
@@ -90,7 +90,7 @@ public class SerializationTest {
 	@Test
 	public void testPriceHitUpperLimitAlarmSerialization() throws IOException,
 			ClassNotFoundException, UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitUpperLimitAlarm(1, exchange, pair, 1000, notify, 0.001);
+		testAlarm = new PriceHitUpperLimitAlarm(1, exchange, pair, 1000, notifier, 0.001);
 		serializeAndDeserialize();
 		checkAlarmIntegrity();
 		checkPriceHitAlarmIntegrity();
@@ -107,24 +107,24 @@ public class SerializationTest {
 
 	@Test
 	public void testPriceChangeAlarmSerialization() throws IOException, ClassNotFoundException {
-		testAlarm = new PriceChangeAlarm(1, exchange, pair, 1000, notify, 50);
+		testAlarm = new PriceChangeAlarm(1, exchange, pair, 1000, notifier, 50);
 		serializeAndDeserialize();
 		checkAlarmIntegrity();
 		checkPriceChangeAlarmIntegrity();
 	}
 
 	@Test
-	public void testPriceSpikeAlarmSerialization() throws IOException, ClassNotFoundException, NumberFormatException,
+	public void testRollingPriceChangeAlarmSerialization() throws IOException, ClassNotFoundException, NumberFormatException,
 			TimeFrameSmallerOrEqualUpdateIntervalException {
-		testAlarm = new PriceSpikeAlarm(1, exchange, pair, 1000, notify, 50, 600000);
+		testAlarm = new RollingPriceChangeAlarm(1, exchange, pair, 1000, notifier, 50, 600000);
 		serializeAndDeserialize();
 		checkPriceChangeAlarmIntegrity();
-		Assert.assertEquals(((PriceSpikeAlarm) testAlarm).getTimeFrame(), ((PriceSpikeAlarm) newAlarm).getTimeFrame(), 0);
+		Assert.assertEquals(((RollingPriceChangeAlarm) testAlarm).getTimeFrame(), ((RollingPriceChangeAlarm) newAlarm).getTimeFrame(), 0);
 	}
 
 	@Test
 	public void testTimerTaskAlarmWrapperSerialization() throws IOException, ClassNotFoundException {
-		PriceChangeAlarm testAlarm = new PriceChangeAlarm(1, exchange, pair, 1000, notify, 50);
+		PriceChangeAlarm testAlarm = new PriceChangeAlarm(1, exchange, pair, 1000, notifier, 50);
 		TimerTaskAlarmWrapper wrapper = new TimerTaskAlarmWrapper(testAlarm, new Timer());
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = null;

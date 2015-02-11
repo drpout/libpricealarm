@@ -9,20 +9,20 @@ import mobi.boilr.libdynticker.core.Exchange;
 import mobi.boilr.libdynticker.core.Pair;
 
 /**
- * A PriceSpikeAlarm is a PriceChangeAlarm with a rolling time frame. Besides
- * the time frame it also takes into account an update interval. The update
- * interval denotes how often price is fetched. The time frame defines the base
- * price, i.e. which price to compare to. When a new price is fetched it marks
- * the end of a time frame and is compared to the value previously fetched at
- * the beginning of such time frame. To do this we need to store values in a
- * buffer for later comparison.
+ * A RollingPriceChangeAlarm is a PriceChangeAlarm with a rolling time frame.
+ * Besides the time frame it also takes into account an update interval. The
+ * update interval denotes how often price is fetched. The time frame defines
+ * the base price, i.e., which price to compare to. When a new price is fetched
+ * it marks the end of a time frame and is compared to the value previously
+ * fetched at the beginning of such time frame. To do this we need to store
+ * values in a buffer for later comparison.
  * 
- * With this approach, a PriceSpikeAlarm is triggered when price drops/rises
- * quickly all of a sudden.
+ * With this approach, a RollingPriceChangeAlarm is triggered when price
+ * drops/rises quickly all of a sudden.
  * 
  * Check: https://github.com/andrefbsantos/boilr/issues/47
  */
-public class PriceSpikeAlarm extends PriceChangeAlarm {
+public class RollingPriceChangeAlarm extends PriceChangeAlarm {
 
 	private class TimestampedLastValue implements Serializable {
 		private static final long serialVersionUID = 3449660866846381443L;
@@ -56,13 +56,13 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 	private double baseValue = Double.NaN;
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
-	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, double change, long timeFrame)
+	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, double change, long timeFrame)
 			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, change);
 		setTimeFrame(timeFrame);
 	}
 
-	public PriceSpikeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, float percent, long timeFrame)
+	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, float percent, long timeFrame)
 			throws TimeFrameSmallerOrEqualUpdateIntervalException {
 		super(id, exchange, pair, updateInterval, notify, percent);
 		setTimeFrame(timeFrame);
@@ -167,5 +167,11 @@ public class PriceSpikeAlarm extends PriceChangeAlarm {
 	@Override
 	public double getUpperLimit() {
 		return baseValue + change;
+	}
+
+	@Override
+	protected void clearBuffer() {
+		lastValueBuffer.clear();
+		lastValue = baseValue = Double.NaN;
 	}
 }

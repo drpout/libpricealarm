@@ -104,4 +104,14 @@ public class PriceChangeAlarm extends Alarm {
 	public double getUpperLimit() {
 		return lastValue + change;
 	}
+
+	@Override
+	public void setPair(Pair pair) {
+		clearBuffer();
+		super.setPair(pair);
+	}
+
+	protected void clearBuffer() {
+		lastValue = Double.NaN;
+	}
 }
