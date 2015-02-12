@@ -105,9 +105,14 @@ public class PriceChangeAlarm extends Alarm {
 		return lastValue + change;
 	}
 
+	/**
+	 * Clears buffer if pair is different from previous one.
+	 */
 	@Override
 	public void setPair(Pair pair) {
-		clearBuffer();
+		if(!this.getPair().equals(pair)) {
+			clearBuffer();
+		}
 		super.setPair(pair);
 	}
 

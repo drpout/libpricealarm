@@ -1,5 +1,6 @@
 package mobi.boilr.libpricealarm;
 
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -126,15 +127,18 @@ public class PriceChangeAlarmTest {
 	}
 
 	@Test
-	public void testClearBuffer() throws NumberFormatException, IOException {
+	public void testClearBuffer() throws NumberFormatException, IOException, InterruptedException {
 		when(notifier.notify(alarmID)).thenReturn(true);
-		when(exchange.getLastValue(pair)).thenReturn(0.004);
+		when(exchange.getLastValue((Pair) notNull())).thenReturn(0.004);
 		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		verify(notifier, after(750).never()).notify(alarmID);
+		Thread.sleep(750);
 		Assert.assertEquals(0.004, testAlarm.getLastValue(), 0);
 		testAlarm.setPair(new Pair("FOO", "BAR"));
 		Assert.assertTrue(Double.isNaN(testAlarm.getLastValue()));
+		Thread.sleep(500);
+		testAlarm.setPair(new Pair("FOO", "BAR"));
+		Assert.assertEquals(0.004, testAlarm.getLastValue(), 0);
 	}
 
 	@Test
