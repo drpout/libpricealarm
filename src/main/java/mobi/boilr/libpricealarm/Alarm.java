@@ -27,7 +27,7 @@ public abstract class Alarm implements Serializable {
 	private Direction direction = Direction.NONE;
 
 	public Alarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier) {
-		this.id = id;
+		this.id = this.position = id;
 		this.exchange = exchange;
 		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
@@ -147,6 +147,7 @@ public abstract class Alarm implements Serializable {
 	public abstract double getLowerLimit();
 
 	public abstract double getUpperLimit();
+
 	public int getPosition() {
 		return position;
 	}
