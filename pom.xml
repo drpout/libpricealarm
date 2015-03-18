@@ -9,6 +9,7 @@
 	<version>0.2.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
+	<url>https://github.com/andrefbsantos/libpricealarm</url>
 	<inceptionYear>2014</inceptionYear>
 
 	<scm>
@@ -264,6 +265,35 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+				<!--  deploy to maven -->		
+			<plugin>
+		      <groupId>org.sonatype.plugins</groupId>
+		      <artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.5</version>
+		      <extensions>true</extensions>
+		      <configuration>
+		        <serverId>ossrh</serverId>
+		        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+		        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+		      </configuration>
+		    </plugin>
+		 
+		    <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-gpg-plugin</artifactId>
+		      <version>1.6</version>
+		      <executions>
+		        <execution>
+		          <id>sign-artifacts</id>
+		          <phase>verify</phase>
+		          <goals>
+		            <goal>sign</goal>
+		          </goals>
+		        </execution>
+		      </executions>
+		    </plugin>
+			
 		</plugins>
 	</build>
 </project>
