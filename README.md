@@ -4,6 +4,18 @@ Java alarms triggered when price of a cryptocurrency or bullion crosses a bounda
 
 Uses [libdynticker](https://github.com/andrefbsantos/libdynticker) to get data from the exchanges.
 
+## Maven
+
+To use the package, you need to use following Maven dependency:
+
+```xml
+<dependency>
+  <groupId>mobi.boilr.libpricealarm</groupId>
+  <artifactId>libpricealarm</artifactId>
+  <version>0.2.0</version>
+</dependency>
+```
+
 ## Building
 Run `mvn process-resources` once to make Maven aware of the plugins we use to download and install dependencies which are not in Maven repositories. For then on you can run `mvn package` to create a jar.
 
