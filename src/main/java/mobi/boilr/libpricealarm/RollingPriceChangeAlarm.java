@@ -20,7 +20,7 @@ import mobi.boilr.libdynticker.core.Pair;
  * With this approach, a RollingPriceChangeAlarm is triggered when price
  * drops/rises quickly all of a sudden.
  * 
- * Check: https://github.com/andrefbsantos/boilr/issues/47
+ * Check: https://github.com/drpout/boilr/issues/47
  */
 public class RollingPriceChangeAlarm extends PriceChangeAlarm {
 

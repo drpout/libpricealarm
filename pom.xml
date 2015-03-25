@@ -9,13 +9,13 @@
 	<version>0.2.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
-	<url>https://github.com/andrefbsantos/libpricealarm</url>
+	<url>https://github.com/drpout/libpricealarm</url>
 	<inceptionYear>2014</inceptionYear>
 
 	<scm>
-		<url>https://github.com/andrefbsantos/libpricealarm</url>
-		<connection>scm:git:https://github.com/andrefbsantos/libpricealarm.git</connection>
-		<developerConnection>scm:git:https://github.com/andrefbsantos/libpricealarm.git</developerConnection>
+		<url>https://github.com/drpout/libpricealarm</url>
+		<connection>scm:git:https://github.com/drpout/libpricealarm.git</connection>
+		<developerConnection>scm:git:https://github.com/drpout/libpricealarm.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -59,7 +59,7 @@
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/andrefbsantos/libpricealarm/issues</url>
+		<url>https://github.com/drpout/libpricealarm/issues</url>
 	</issueManagement>
 
 	<distributionManagement>
@@ -146,7 +146,7 @@
 						</goals>
 						<configuration>
 							<url>https://github.com</url>
-							<fromFile>andrefbsantos/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.jar</fromFile>
+							<fromFile>drpout/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.jar</fromFile>
 							<toDir>${project.build.directory}/lib</toDir>
 						</configuration>
 					</execution>
@@ -158,7 +158,7 @@
 						</goals>
 						<configuration>
 							<url>https://github.com</url>
-							<fromFile>andrefbsantos/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.pom</fromFile>
+							<fromFile>drpout/libdynticker/releases/download/${libdynticker.version}/libdynticker-${libdynticker.version}.pom</fromFile>
 							<toDir>${project.build.directory}/lib</toDir>
 						</configuration>
 					</execution>

@@ -2,7 +2,7 @@
 
 Java alarms triggered when price of a cryptocurrency or bullion crosses a boundary or surpasses a given change.
 
-Uses [libdynticker](https://github.com/andrefbsantos/libdynticker) to get data from the exchanges.
+Uses [libdynticker](https://github.com/drpout/libdynticker) to get data from the exchanges.
 
 ## Using this library
 
@@ -27,4 +27,4 @@ Run `mvn process-resources` once to make Maven aware of the plugins we use to do
 libpricealarm follows [Semantic Versioning](http://semver.org) with the API being the public methods and attributes provided by its classes.
 
 ## License and authorship
-libpricealarm code licensed under [GNU LGPL v3](/LICENSE) or later. Copyright belongs to [André Filipe Santos](https://github.com/andrefbsantos), [David Ludovino](https://github.com/dllud) and other [contributors listed on GitHub](https://github.com/andrefbsantos/libpricealarm/graphs/contributors).
+libpricealarm code licensed under [GNU LGPL v3](/LICENSE) or later. Copyright belongs to [André Filipe Santos](https://github.com/andrefbsantos), [David Ludovino](https://github.com/dllud) and other [contributors listed on GitHub](https://github.com/drpout/libpricealarm/graphs/contributors).
