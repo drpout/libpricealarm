@@ -1,5 +1,7 @@
 # libpricealarm
 
+[![Build Status](http://ci.boilr.mobi/job/libpricealarm/badge/icon)](http://ci.boilr.mobi/job/libpricealarm/)
+
 Java alarms triggered when price of a cryptocurrency or cryptoasset crosses a boundary or surpasses a given change.
 
 Uses [libdynticker](https://github.com/drpout/libdynticker) to get data from the exchanges.
