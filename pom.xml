@@ -23,7 +23,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jdk.version>1.6</jdk.version>
-		<libdynticker.version>0.6.0</libdynticker.version>
 		<release.description>
 			\+ 
 			\* 
