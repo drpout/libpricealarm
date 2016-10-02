@@ -10,13 +10,13 @@ Uses [libdynticker](https://github.com/drpout/libdynticker) to get data from the
 
 ### Gradle
 ```groovy
-compile 'mobi.boilr.libpricealarm:libpricealarm:0.2.0'
+compile 'mobi.boilr:libpricealarm:0.2.0'
 ```
 
 ### Maven
 ```xml
 <dependency>
-  <groupId>mobi.boilr.libpricealarm</groupId>
+  <groupId>mobi.boilr</groupId>
   <artifactId>libpricealarm</artifactId>
   <version>0.2.0</version>
 </dependency>

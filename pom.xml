@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>mobi.boilr.libpricealarm</groupId>
+	<groupId>mobi.boilr</groupId>
 	<artifactId>libpricealarm</artifactId>
 	<packaging>jar</packaging>
 	<version>0.3.0</version>
@@ -77,7 +77,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>mobi.boilr.libdynticker</groupId>
+			<groupId>mobi.boilr</groupId>
 			<artifactId>libdynticker</artifactId>
 			<!-- libpricealarm builds against all libdynticker versions published so far. -->
 			<version>[0.0.0,)</version>  
