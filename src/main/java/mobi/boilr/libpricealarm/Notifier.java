@@ -23,4 +23,17 @@ public abstract class Notifier implements Serializable {
 	 * @return true if alarm should be reset, false if it should be turned off
 	 */
 	protected abstract boolean notify(int alarmID);
+
+	/**
+	 * Checks whether alarm should be defused and launches a suppression if so.
+	 */
+	public void defuse(Alarm alarm) {
+		if(alarm.isDefusable())
+			suppress(alarm.getId());
+	}
+
+	/**
+	 * Hides/mutes any previous notification for the alarm.
+	 */
+	protected abstract void suppress(int alarmID);
 }

@@ -6,7 +6,7 @@
 	<groupId>mobi.boilr</groupId>
 	<artifactId>libpricealarm</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.1</version>
+	<version>0.3.0</version>
 	<name>libpricealarm</name>
 	<description>Java alarms triggered when price crosses a boundary or surpasses given change.</description>
 	<url>https://github.com/drpout/libpricealarm</url>
@@ -24,7 +24,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jdk.version>1.6</jdk.version>
 		<release.description>
-			\* Fixed dependency resolution with new groupId.
+			\+ Added defusing capability to suppress ongoing notifications.
 		</release.description>
 	</properties>
 

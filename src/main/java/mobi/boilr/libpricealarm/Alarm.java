@@ -12,7 +12,7 @@ public abstract class Alarm implements Serializable {
 	private static final long serialVersionUID = 438506410563236110L;
 
 	private int id;
-	private boolean on = true;
+	private boolean on = true, defusable;
 	private long period;
 	private transient Exchange exchange;
 	private String exchangeCode;
@@ -26,13 +26,14 @@ public abstract class Alarm implements Serializable {
 	};
 	private Direction direction = Direction.NONE;
 
-	public Alarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier) {
+	public Alarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier, boolean defusable) {
 		this.id = this.position = id;
 		this.exchange = exchange;
 		exchangeCode = exchange.getClass().getCanonicalName();
 		this.pair = pair;
 		this.period = period;
 		this.notifier = notifier;
+		this.defusable = defusable;
 	}
 
 	/**
@@ -154,5 +155,13 @@ public abstract class Alarm implements Serializable {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public boolean isDefusable() {
+		return defusable;
+	}
+
+	public void setDefusable(boolean defusable) {
+		this.defusable = defusable;
 	}
 }

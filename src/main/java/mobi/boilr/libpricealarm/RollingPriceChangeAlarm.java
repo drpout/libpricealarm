@@ -56,15 +56,15 @@ public class RollingPriceChangeAlarm extends PriceChangeAlarm {
 	private double baseValue = Double.NaN;
 	private List<TimestampedLastValue> lastValueBuffer = new ArrayList<TimestampedLastValue>();
 
-	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, double change, long timeFrame)
-			throws TimeFrameSmallerOrEqualUpdateIntervalException {
-		super(id, exchange, pair, updateInterval, notify, change);
+	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify,
+			boolean defusable, double change, long timeFrame) throws TimeFrameSmallerOrEqualUpdateIntervalException {
+		super(id, exchange, pair, updateInterval, notify, defusable, change);
 		setTimeFrame(timeFrame);
 	}
 
-	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify, float percent, long timeFrame)
-			throws TimeFrameSmallerOrEqualUpdateIntervalException {
-		super(id, exchange, pair, updateInterval, notify, percent);
+	public RollingPriceChangeAlarm(int id, Exchange exchange, Pair pair, long updateInterval, Notifier notify,
+			boolean defusable, float percent, long timeFrame) throws TimeFrameSmallerOrEqualUpdateIntervalException {
+		super(id, exchange, pair, updateInterval, notify, defusable, percent);
 		setTimeFrame(timeFrame);
 	}
 
@@ -112,9 +112,10 @@ public class RollingPriceChangeAlarm extends PriceChangeAlarm {
 			if(isPercent()) {
 				calcChangeFromPercent(baseValue);
 			}
-			if(lastChange >= change) {
+			if(lastChange >= change)
 				ret = notifier.trigger(this);
-			}
+			else
+				notifier.defuse(this);
 			if(isPercent()) {
 				calcLastChangeInPercent(baseValue);
 			}

@@ -13,9 +13,9 @@ public class PriceHitAlarm extends Alarm {
 	private boolean wasUpperLimitHit = false;
 
 	public PriceHitAlarm(int id, Exchange exchange, Pair pair, long period, Notifier notifier,
-			double upperLimit, double lowerLimit)
+			boolean defusable, double upperLimit, double lowerLimit)
 			throws UpperLimitSmallerOrEqualLowerLimitException {
-		super(id, exchange, pair, period, notifier);
+		super(id, exchange, pair, period, notifier, defusable);
 		if(upperLimit <= lowerLimit) {
 			throw new UpperLimitSmallerOrEqualLowerLimitException();
 		} else {
@@ -34,6 +34,7 @@ public class PriceHitAlarm extends Alarm {
 		} else if(lastValue >= upperLimit) {
 			wasUpperLimitHit = true;
 		} else {
+			notifier.defuse(this);
 			return true;
 		}
 		return notifier.trigger(this);

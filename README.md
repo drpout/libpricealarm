@@ -10,7 +10,7 @@ Uses [libdynticker](https://github.com/drpout/libdynticker) to get data from the
 
 ### Gradle
 ```groovy
-compile 'mobi.boilr:libpricealarm:0.2.0'
+compile 'mobi.boilr:libpricealarm:0.3.0'
 ```
 
 ### Maven
@@ -18,7 +18,7 @@ compile 'mobi.boilr:libpricealarm:0.2.0'
 <dependency>
   <groupId>mobi.boilr</groupId>
   <artifactId>libpricealarm</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 

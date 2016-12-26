@@ -8,13 +8,13 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Timer;
 
-import mobi.boilr.libdynticker.core.Exchange;
-import mobi.boilr.libdynticker.core.Pair;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import mobi.boilr.libdynticker.core.Exchange;
+import mobi.boilr.libdynticker.core.Pair;
 
 public class PriceHitAlarmTest {
 
@@ -32,17 +32,17 @@ public class PriceHitAlarmTest {
 		exchange = mock(Exchange.class);
 		pair = new Pair("XXX", "YYY");
 		timer = new Timer();
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0043, 0.0042);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, true, 0.0043, 0.0042);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
 	public void testCreateEqualLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0043, 0.0043);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, true, 0.0043, 0.0043);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
 	public void testCreateInvertedLimits() throws UpperLimitSmallerOrEqualLowerLimitException {
-		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, 0.0042, 0.0043);
+		testAlarm = new PriceHitAlarm(alarmID, exchange, pair, 500, notifier, true, 0.0042, 0.0043);
 	}
 
 	@Test(expected = UpperLimitSmallerOrEqualLowerLimitException.class)
@@ -61,6 +61,7 @@ public class PriceHitAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).times(1)).notify(alarmID);
+		verify(notifier, after(0).never()).suppress(alarmID);
 		Assert.assertEquals(0.00445625, testAlarm.getLastValue(), 0);
 		wrapper.turnOff();
 	}
@@ -71,6 +72,7 @@ public class PriceHitAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(1250).times(3)).notify(alarmID);
+		verify(notifier, after(0).never()).suppress(alarmID);
 		Assert.assertEquals(0.00445625, testAlarm.getLastValue(), 0);
 		wrapper.turnOff();
 	}
@@ -81,6 +83,7 @@ public class PriceHitAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.004123);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).times(1)).notify(alarmID);
+		verify(notifier, after(0).never()).suppress(alarmID);
 		Assert.assertEquals(0.004123, testAlarm.getLastValue(), 0);
 		wrapper.turnOff();
 	}
@@ -91,6 +94,7 @@ public class PriceHitAlarmTest {
 		when(exchange.getLastValue(pair)).thenReturn(0.0042523);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).never()).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(0.0042523, testAlarm.getLastValue(), 0);
 		wrapper.turnOff();
 	}

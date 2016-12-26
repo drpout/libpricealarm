@@ -1,22 +1,22 @@
 package mobi.boilr.libpricealarm;
 
+import static org.mockito.Mockito.after;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.Timer;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import mobi.boilr.libdynticker.core.Exchange;
 import mobi.boilr.libdynticker.core.Pair;
-import mobi.boilr.libpricealarm.Alarm.Direction;
 
-public class AlarmTest {
+public class NotifierTest {
 
 	private PriceHitAlarm testAlarm;
 	private TimerTaskAlarmWrapper wrapper;
@@ -28,6 +28,7 @@ public class AlarmTest {
 	@Before
 	public void setUp() throws Exception {
 		notifier = mock(Notifier.class, Mockito.CALLS_REAL_METHODS);
+		when(notifier.notify(alarmID)).thenReturn(true);
 		exchange = mock(Exchange.class);
 		pair = new Pair("XXX", "YYY");
 		when(exchange.getLastValue(pair)).thenReturn(15.0);
@@ -42,20 +43,22 @@ public class AlarmTest {
 	}
 
 	@Test
-	public void testDirection() throws IOException, InterruptedException {
-		Thread.sleep(250);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.NONE);
-		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.NONE);
-		when(exchange.getLastValue(pair)).thenReturn(16.0);
-		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.UP);
-		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.UP);
-		when(exchange.getLastValue(pair)).thenReturn(15.0);
-		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.DOWN);
-		Thread.sleep(500);
-		Assert.assertEquals(testAlarm.getDirection(), Direction.DOWN);
+	public void testOffNoNotification() throws NumberFormatException, IOException {
+		verify(notifier, after(250).never()).notify(alarmID);
+		when(exchange.getLastValue(pair)).thenReturn(21.0);
+		verify(notifier, after(500).times(1)).notify(alarmID);
+		testAlarm.turnOff();
+		verify(notifier, after(500).times(1)).notify(alarmID);
+	}
+
+	@Test
+	public void testNotDefusableNoSuppress() throws NumberFormatException, IOException {
+		verify(notifier, after(250).times(1)).suppress(alarmID);
+		testAlarm.setDefusable(false);
+		verify(notifier, after(500).times(1)).suppress(alarmID);
+		testAlarm.setDefusable(true);
+		verify(notifier, after(500).times(2)).suppress(alarmID);
+		when(exchange.getLastValue(pair)).thenReturn(21.0);
+		verify(notifier, after(500).times(2)).suppress(alarmID);
 	}
 }

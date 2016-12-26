@@ -20,14 +20,16 @@ public class PriceChangeAlarm extends Alarm {
 	protected double lastChange = 0;
 	protected long elapsedMilis = 0;
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, double change) {
-		super(id, exchange, pair, timeFrame, notifier);
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, boolean defusable,
+			double change) {
+		super(id, exchange, pair, timeFrame, notifier, defusable);
 		this.change = change;
 		percent = 0;
 	}
 
-	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, float percent) {
-		super(id, exchange, pair, timeFrame, notifier);
+	public PriceChangeAlarm(int id, Exchange exchange, Pair pair, long timeFrame, Notifier notifier, boolean defusable,
+			float percent) {
+		super(id, exchange, pair, timeFrame, notifier, defusable);
 		this.percent = percent;
 	}
 
@@ -43,9 +45,10 @@ public class PriceChangeAlarm extends Alarm {
 			computeDirection(lastValue, newValue);
 			elapsedMilis = getLastUpdateTimestamp().getTime() - prevMilis;
 			lastChange = Math.abs(lastValue - newValue);
-			if(lastChange >= change) {
+			if(lastChange >= change)
 				ret = notifier.trigger(this);
-			}
+			else
+				notifier.defuse(this);
 			if(isPercent()) {
 				calcLastChangeInPercent(lastValue);
 			}

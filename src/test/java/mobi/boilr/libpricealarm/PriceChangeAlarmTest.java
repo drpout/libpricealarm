@@ -9,14 +9,14 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.Timer;
 
-import mobi.boilr.libdynticker.core.Exchange;
-import mobi.boilr.libdynticker.core.Pair;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import mobi.boilr.libdynticker.core.Exchange;
+import mobi.boilr.libdynticker.core.Pair;
 
 public class PriceChangeAlarmTest {
 
@@ -45,12 +45,14 @@ public class PriceChangeAlarmTest {
 	public void testChangeNoReset() throws IOException {
 		when(notifier.notify(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 0.001d);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).never()).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.005);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getChange(), 0);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
 		Assert.assertEquals(500, testAlarm.getElapsedMilis(), 100);
@@ -61,17 +63,21 @@ public class PriceChangeAlarmTest {
 	public void testChangeReset() throws IOException, InterruptedException {
 		when(notifier.notify(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 0.001d);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 0.001d);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).never()).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.005);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(0, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notifier, after(500).times(2)).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(0.001, testAlarm.getChange(), 0);
 		Assert.assertEquals(0.001, testAlarm.getLastChange(), 0);
 		Assert.assertEquals(500, testAlarm.getElapsedMilis(), 100);
@@ -82,12 +88,14 @@ public class PriceChangeAlarmTest {
 	public void testPercentNoReset() throws IOException {
 		when(notifier.notify(alarmID)).thenReturn(false);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).never()).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0.003, testAlarm.getChange(), 0);
 		Assert.assertEquals(50, testAlarm.getLastChange(), 0);
 		Assert.assertEquals(500, testAlarm.getElapsedMilis(), 100);
@@ -98,18 +106,22 @@ public class PriceChangeAlarmTest {
 	public void testPercentReset() throws IOException {
 		when(notifier.notify(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		verify(notifier, after(750).never()).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(0, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.006);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(1)).suppress(alarmID);
 		Assert.assertEquals(50, testAlarm.getLastChange(), 0);
 		when(exchange.getLastValue(pair)).thenReturn(0.008);
 		verify(notifier, after(500).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(33, testAlarm.getLastChange(), 1);
 		when(exchange.getLastValue(pair)).thenReturn(0.012);
 		verify(notifier, after(500).times(2)).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(0.006, testAlarm.getChange(), 0);
 		Assert.assertEquals(50, testAlarm.getLastChange(), 0);
 		Assert.assertEquals(500, testAlarm.getElapsedMilis(), 100);
@@ -119,7 +131,7 @@ public class PriceChangeAlarmTest {
 	@Test
 	public void testGetLimits() throws NumberFormatException, IOException, InterruptedException {
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		Thread.sleep(250);
 		Assert.assertEquals(0.006, testAlarm.getUpperLimit(), 0);
@@ -130,7 +142,7 @@ public class PriceChangeAlarmTest {
 	public void testClearBuffer() throws NumberFormatException, IOException, InterruptedException {
 		when(notifier.notify(alarmID)).thenReturn(true);
 		when(exchange.getLastValue((Pair) notNull())).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 500, notifier, true, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		Thread.sleep(750);
 		Assert.assertEquals(0.004, testAlarm.getLastValue(), 0);
@@ -145,7 +157,7 @@ public class PriceChangeAlarmTest {
 	public void testToString() throws IOException {
 		when(exchange.getName()).thenReturn("DummyExchange");
 		when(exchange.getLastValue(pair)).thenReturn(0.004);
-		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notifier, 50f);
+		testAlarm = new PriceChangeAlarm(alarmID, exchange, pair, 1000, notifier, true, 50f);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
 		Assert.assertEquals("PriceChangeAlarm XXX YYY DummyExchange", testAlarm.toString());
 	}
