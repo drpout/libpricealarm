@@ -71,8 +71,8 @@ public class PriceHitAlarmTest {
 		when(notifier.notify(alarmID)).thenReturn(true);
 		when(exchange.getLastValue(pair)).thenReturn(0.00445625);
 		wrapper = new TimerTaskAlarmWrapper(testAlarm, timer);
-		verify(notifier, after(1250).times(3)).notify(alarmID);
-		verify(notifier, after(0).never()).suppress(alarmID);
+		verify(notifier, after(1250).times(1)).notify(alarmID);
+		verify(notifier, after(0).times(2)).suppress(alarmID);
 		Assert.assertEquals(0.00445625, testAlarm.getLastValue(), 0);
 		wrapper.turnOff();
 	}

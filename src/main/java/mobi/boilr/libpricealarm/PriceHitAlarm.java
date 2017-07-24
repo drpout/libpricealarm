@@ -37,6 +37,10 @@ public class PriceHitAlarm extends Alarm {
 			notifier.defuse(this);
 			return true;
 		}
+		
+		double change = (upperLimit - lowerLimit)/2;
+		upperLimit = lastValue + change;
+		lowerLimit = lastValue - change;
 		return notifier.trigger(this);
 	}
 
